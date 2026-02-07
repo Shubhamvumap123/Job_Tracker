@@ -1,16 +1,23 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import TicketList from './components/TicketList'
+import CreateTicket from './components/CreateTicket/CreateTicket'
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [isCreating, setIsCreating] = useState(false);
   return (
     <>
       <h1>Ticket Management System</h1>
-      <TicketList />
+      <button onClick={() => setIsCreating(true)}>Create Ticket</button>
+
+      {/* 3. Conditionally render the component based on state */}
+      {isCreating ? (
+        <div className="modal-overlay">
+          <CreateTicket onClose={() => setIsCreating(false)} />
+        </div>
+      ) : (
+        <TicketList />
+      )}
     </>
   )
 }
