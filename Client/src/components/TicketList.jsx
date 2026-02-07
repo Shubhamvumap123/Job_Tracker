@@ -11,13 +11,14 @@ const TicketList = () => {
     const [tickets, setTickets] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [editFormData, setEditFormData] = useState({});
-
+    const [status, setStatus] = useState('');
+    const [priority, setPriority] = useState('');
     useEffect(() => {
-        fetchTickets();
-    }, []);
+        fetchTickets(status, priority);
+    }, [status, priority]);
 
-    const fetchTickets = () => {
-        axios.get(`${API_URL}/list`)
+    const fetchTickets = (status, priority) => {
+        axios.get(`${API_URL}/list?status=${status}&priority=${priority}`)
             .then((response) => {
                 setTickets(response?.data?.tickets || []);
             })
@@ -89,8 +90,24 @@ const TicketList = () => {
                     className="search-input"
                 />
                 <div className="sort-options">
-                    <button className="sort-btn">Sort by Priority</button>
-                    <button className="sort-btn">Sort by Status</button>
+                    <label htmlFor="priority-select">Priority:</label>
+                    <select id="priority-select" className="sort-btn" onChange={(e) => setPriority(e.target.value)}>
+                        <option value="">Select Priority</option>
+                        {PRIORITY_OPTIONS.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                    <label htmlFor="status-select">Status:</label>
+                    <select id="status-select" className="sort-btn" onChange={(e) => setStatus(e.target.value)}>
+                        <option value="">Select Status</option>
+                        {STATUS_OPTIONS.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
             <form onSubmit={(e) => e.preventDefault()}>
