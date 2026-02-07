@@ -11,8 +11,12 @@ const createTicket = async (req, res) => {
 };
 const getTicketList = async (req, res) => {
     try {
-        const tickets = await Ticket.find();
-        res.status(200).json(tickets);
+        const { status, priority } = req.query;
+        const filter = {};
+        if (status) filter.status = status;
+        if (priority) filter.priority = priority;
+        const tickets = await Ticket.find(filter);
+        res.status(200).json({ success: true, tickets });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
