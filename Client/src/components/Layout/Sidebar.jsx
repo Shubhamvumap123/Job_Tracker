@@ -15,7 +15,6 @@ const Sidebar = ({ onCreateClick, isOpen, onClose }) => {
 
     return (
         <>
-            {/* Mobile Overlay */}
             {isOpen && (
                 <div
                     className="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"
@@ -65,7 +64,6 @@ const Sidebar = ({ onCreateClick, isOpen, onClose }) => {
                     </nav>
 
                     <div className="p-4 border-t border-slate-800">
-                        {/* Footer content if needed later */}
                     </div>
                 </div>
             </aside>
