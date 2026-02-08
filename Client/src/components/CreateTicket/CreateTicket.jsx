@@ -10,9 +10,11 @@ const CreateTicket = ({ onClose }) => {
     const [priority, setPriority] = useState("Low");
     const [status, setStatus] = useState("Open");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleCreateTicket = () => {
         setIsSubmitting(true);
+        setError(null);
         axios.post(API_URL, {
             title,
             description,
@@ -25,6 +27,8 @@ const CreateTicket = ({ onClose }) => {
             window.location.reload();
         }).catch(err => {
             console.error(err);
+            const errorMessage = err.response?.data?.error || "Failed to create ticket";
+            setError(errorMessage);
             setIsSubmitting(false);
         });
     }
@@ -42,6 +46,11 @@ const CreateTicket = ({ onClose }) => {
             </div>
 
             <div className="space-y-4">
+                {error && (
+                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-200">
+                        {error}
+                    </div>
+                )}
                 <div>
                     <label className={labelClass}>Title</label>
                     <input

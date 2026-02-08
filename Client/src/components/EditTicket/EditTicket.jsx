@@ -17,19 +17,30 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
         }
     }, [ticket]);
 
+    const [error, setError] = useState(null);
+
     const handleUpdateTicket = async () => {
         setIsSubmitting(true);
+        setError(null);
         try {
-            await onUpdate(ticket._id, {
+            const result = await onUpdate(ticket._id, {
                 title,
                 description,
                 priority,
                 status
             });
-            setIsSubmitting(false);
-            onClose();
+
+            if (result && !result.success) {
+                setError(result.error);
+                setIsSubmitting(false);
+            } else {
+                // Success handled by parent (closing modal), but we can safe guard
+                setIsSubmitting(false);
+                onClose();
+            }
         } catch (error) {
             console.error(error);
+            setError("An unexpected error occurred");
             setIsSubmitting(false);
         }
     }
@@ -47,6 +58,11 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
             </div>
 
             <div className="space-y-4">
+                {error && (
+                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-200">
+                        {error}
+                    </div>
+                )}
                 <div>
                     <label className={labelClass}>Title</label>
                     <input

@@ -17,11 +17,12 @@ const TicketDashboard = () => {
     const [editingTicket, setEditingTicket] = useState(null);
 
     const handleUpdate = async (id, data) => {
-        const success = await updateTicket(id, data);
-        if (success) {
+        const result = await updateTicket(id, data);
+        if (result.success) {
             setEditingTicket(null);
             window.location.reload();
         }
+        return result;
     };
 
     if (error) {

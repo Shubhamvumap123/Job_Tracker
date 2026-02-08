@@ -6,12 +6,13 @@ export const useTickets = () => {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [filters, setFilters] = useState({ status: '', priority: '' });
+    const [filters, setFilters] = useState({ status: '', priority: '', search: '' });
+    const debouncedSearch = useDebounce(filters.search, 500);
 
     const fetchTickets = useCallback(async () => {
         setLoading(true);
         try {
-            const params = { ...filters };
+            const params = { ...filters, search: debouncedSearch };
             const data = await ticketService.getAll(params);
             setTickets(data);
             setError(null);
@@ -20,7 +21,7 @@ export const useTickets = () => {
         } finally {
             setLoading(false);
         }
-    }, [filters.status, filters.priority]);
+    }, [filters.status, filters.priority, debouncedSearch]);
 
     useEffect(() => {
         fetchTickets();
@@ -45,10 +46,11 @@ export const useTickets = () => {
             await ticketService.update(id, updatedData);
             // Refresh list to ensure sync or update local state manually
             fetchTickets();
-            return true; // Success
+            return { success: true };
         } catch (err) {
-            setError("Could not update ticket");
-            return false;
+            const errorMessage = err.response?.data?.error || "Could not update ticket";
+            // We return the error so the component can display it
+            return { success: false, error: errorMessage };
         }
     };
 
