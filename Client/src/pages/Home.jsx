@@ -1,14 +1,21 @@
 import { Ticket, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTickets } from '../hooks/useTickets';
 
 const Home = () => {
     const navigate = useNavigate();
+    const { tickets } = useTickets();
+
+    const totalTickets = tickets.length;
+    const openTickets = tickets.filter(t => t.status === 'Open').length;
+    const inProgressTickets = tickets.filter(t => t.status === 'In Progress').length;
+    const resolvedTickets = tickets.filter(t => ['Closed', 'Resolved'].includes(t.status)).length;
 
     const stats = [
-        { label: 'Total Tickets', value: '12', icon: Ticket, color: 'bg-blue-500' },
-        { label: 'Open', value: '5', icon: AlertCircle, color: 'bg-yellow-500' },
-        { label: 'In Progress', value: '3', icon: Clock, color: 'bg-indigo-500' },
-        { label: 'Resolved', value: '4', icon: CheckCircle, color: 'bg-green-500' },
+        { label: 'Total Tickets', value: totalTickets, icon: Ticket, color: 'bg-blue-500' },
+        { label: 'Open', value: openTickets, icon: AlertCircle, color: 'bg-yellow-500' },
+        { label: 'In Progress', value: inProgressTickets, icon: Clock, color: 'bg-indigo-500' },
+        { label: 'Closed', value: resolvedTickets, icon: CheckCircle, color: 'bg-green-500' },
     ];
 
     return (
@@ -48,7 +55,6 @@ const Home = () => {
                     </button>
                 </div>
 
-                {/* Decorative background circles */}
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-0 right-20 -mb-20 w-60 h-60 bg-purple-400 opacity-20 rounded-full blur-2xl"></div>
             </div>
