@@ -9,9 +9,6 @@ const startServer = async () => {
         // middleware setup
         app.use(cors());
         app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
-
-        // routes
         app.use('/api/tickets', require('./routes/TicketRoutes'));
 
         // wait for database to connect before starting server
@@ -20,8 +17,8 @@ const startServer = async () => {
 
         const PORT = process.env.MONGO_PORT || 5000;
 
-        // start listening for requests
-        const server = app.listen(PORT, () => {
+        // 3. Store the server instance to handle shutdowns later
+        app.listen(PORT, () => {
             console.log(`Server heart beating on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
         });
 
