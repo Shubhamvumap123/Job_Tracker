@@ -15,7 +15,7 @@ const startServer = async () => {
         await connectDB();
         console.log('✅ Database connected successfully');
 
-        const PORT = process.env.PORT || 5000;
+        const PORT = process.env.MONGO_PORT || 5000;
 
         // 3. Store the server instance to handle shutdowns later
         const server = app.listen(PORT, () => {
