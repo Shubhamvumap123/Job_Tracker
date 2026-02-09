@@ -7,8 +7,11 @@ export const useTickets = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [filters, setFilters] = useState({ status: '', priority: '', search: '' });
+
+    // delay search to avoid too many api calls
     const debouncedSearch = useDebounce(filters.search, 500);
 
+    // fetch tickets whenever filters or search changes
     const fetchTickets = useCallback(async () => {
         setLoading(true);
         try {
@@ -23,10 +26,12 @@ export const useTickets = () => {
         }
     }, [filters.status, filters.priority, debouncedSearch]);
 
+    // initial extraction
     useEffect(() => {
         fetchTickets();
     }, [fetchTickets]);
 
+    // optimistic UI update for deletion
     const removeTicket = async (id) => {
         const originalTickets = [...tickets];
         setTickets(tickets.filter(t => t._id !== id));
@@ -34,11 +39,13 @@ export const useTickets = () => {
         try {
             await ticketService.delete(id);
         } catch (err) {
+            // revert if api fails
             setTickets(originalTickets);
             setError("Could not delete ticket");
         }
     };
 
+    // handle ticket updates and refresh list
     const updateTicket = async (id, updatedData) => {
         try {
             await ticketService.update(id, updatedData);
@@ -50,6 +57,7 @@ export const useTickets = () => {
         }
     };
 
+    // helper to update filter state
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
     };

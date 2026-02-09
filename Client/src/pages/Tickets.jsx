@@ -1,5 +1,6 @@
 import TicketDashboard from '../TicketDashboard';
 
+// Wrapper page for the main ticket dashboard
 const Tickets = () => {
     return (
         <div className="space-y-6">

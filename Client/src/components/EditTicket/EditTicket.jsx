@@ -8,6 +8,7 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
     const [status, setStatus] = useState(ticket?.status || "Open");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // pre-fill form when ticket data is available
     useEffect(() => {
         if (ticket) {
             setTitle(ticket.title);
@@ -19,6 +20,7 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
 
     const [error, setError] = useState(null);
 
+    // submit updated ticket data
     const handleUpdateTicket = async () => {
         setIsSubmitting(true);
         setError(null);

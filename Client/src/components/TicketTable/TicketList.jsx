@@ -8,6 +8,7 @@ const TicketList = ({ viewMode, tickets, onEdit, onDelete }) => {
 
             <div className="flex-1 overflow-y-auto min-h-0 pr-2">
 
+                {/* Render list or grid view based on preference */}
                 {viewMode === 'list' ? (
                     <div className="border border-gray-200 rounded-lg shadow-sm bg-white">
                         <table className="min-w-full divide-y divide-gray-200">
