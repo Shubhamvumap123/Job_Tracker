@@ -10,8 +10,7 @@ const TicketRow = ({ ticket, onEdit, onDelete }) => {
 
     const statusStyles = {
         Open: 'bg-blue-100 text-blue-700',
-        'In Progress': 'bg-purple-100 text-purple-700',
-        Closed: 'bg-gray-100 text-gray-700',
+        "In Progress": 'bg-purple-100 text-purple-700',
         Closed: 'bg-green-100 text-green-700'
     };
 
