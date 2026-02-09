@@ -8,7 +8,6 @@ const startServer = async () => {
     try {
         app.use(cors());
         app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
         app.use('/api/tickets', require('./routes/TicketRoutes'));
         // 2. Wait for DB connection first
         await connectDB();
@@ -17,7 +16,7 @@ const startServer = async () => {
         const PORT = process.env.MONGO_PORT || 5000;
 
         // 3. Store the server instance to handle shutdowns later
-        const server = app.listen(PORT, () => {
+        app.listen(PORT, () => {
             console.log(`Server heart beating on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
         });
 
