@@ -14,7 +14,7 @@ export const useTickets = () => {
         try {
             const params = { ...filters, search: debouncedSearch };
             const data = await ticketService.getAll(params);
-            setTickets(data);
+            setTickets(data.data || data);
             setError(null);
         } catch (err) {
             setError('Failed to load tickets');
@@ -28,14 +28,12 @@ export const useTickets = () => {
     }, [fetchTickets]);
 
     const removeTicket = async (id) => {
-        // Optimistic UI update: Remove from UI immediately before API finishes
         const originalTickets = [...tickets];
         setTickets(tickets.filter(t => t._id !== id));
 
         try {
             await ticketService.delete(id);
         } catch (err) {
-            // Revert if API fails
             setTickets(originalTickets);
             setError("Could not delete ticket");
         }
@@ -44,12 +42,10 @@ export const useTickets = () => {
     const updateTicket = async (id, updatedData) => {
         try {
             await ticketService.update(id, updatedData);
-            // Refresh list to ensure sync or update local state manually
             fetchTickets();
             return { success: true };
         } catch (err) {
             const errorMessage = err.response?.data?.error || "Could not update ticket";
-            // We return the error so the component can display it
             return { success: false, error: errorMessage };
         }
     };
