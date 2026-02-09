@@ -6,6 +6,7 @@ const Home = () => {
     const navigate = useNavigate();
     const { tickets } = useTickets();
 
+    // calculate quick statistics for the dashboard
     const totalTickets = tickets.length;
     const openTickets = tickets.filter(t => t.status === 'Open').length;
     const inProgressTickets = tickets.filter(t => t.status === 'In Progress').length;

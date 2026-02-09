@@ -12,9 +12,12 @@ const OPTIONS = {
 };
 
 const TicketDashboard = () => {
+    // using custom hook to manage ticket data and state
     const { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket } = useTickets();
     const [editingTicket, setEditingTicket] = useState(null);
     const [viewMode, setViewMode] = useState('list');
+
+    // wrapper to handle ticket updates and close modal on success
     const handleUpdate = async (id, data) => {
         const result = await updateTicket(id, data);
         if (result.success) {

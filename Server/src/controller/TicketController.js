@@ -1,5 +1,6 @@
 const Ticket = require("../model/Ticket.Model");
 
+// Create a new ticket with validation
 const createTicket = async (req, res) => {
     try {
         const { title, description, priority, status } = req.body;
@@ -13,6 +14,8 @@ const createTicket = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Get all tickets with optional filtering and search
 const getTicketList = async (req, res) => {
     try {
         const { status, priority, search } = req.query;
@@ -30,6 +33,8 @@ const getTicketList = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Update existing ticket details
 const updateTicket = async (req, res) => {
     try {
         const { title, description, priority, status } = req.body;
@@ -50,6 +55,8 @@ const updateTicket = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Remove a ticket from the database
 const deleteTicket = async (req, res) => {
     try {
         const ticket = await Ticket.findByIdAndDelete(req.params.id);

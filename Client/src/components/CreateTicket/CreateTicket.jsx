@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import axios from 'axios';
+import { ticketService } from '../../API/ticketService';
 import { X } from 'lucide-react';
-
-let API_URL = "http://localhost:5000/api/tickets/create";
 
 const CreateTicket = ({ onClose }) => {
     const [title, setTitle] = useState("");
@@ -12,10 +10,11 @@ const CreateTicket = ({ onClose }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
 
+    // handle form submission
     const handleCreateTicket = () => {
         setIsSubmitting(true);
         setError(null);
-        axios.post(API_URL, {
+        ticketService.create({
             title,
             description,
             priority,

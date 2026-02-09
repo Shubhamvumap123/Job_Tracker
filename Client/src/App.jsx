@@ -5,11 +5,13 @@ import Home from './pages/Home';
 import Tickets from './pages/Tickets';
 import CreateTicket from './components/CreateTicket/CreateTicket';
 
+// Main application entry point setting up routes and layout
 function App() {
   const [isCreating, setIsCreating] = useState(false);
 
   return (
     <BrowserRouter>
+      {/* Defined routes for the application */}
       <Routes>
         <Route path="/" element={<Layout onCreateClick={() => setIsCreating(true)} />}>
           <Route index element={<Home />} />
