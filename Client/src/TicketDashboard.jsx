@@ -8,8 +8,7 @@ import { useState } from 'react';
 // Configuration constants
 const OPTIONS = {
     priorities: ['High', 'Medium', 'Low'],
-    statuses: ['Open', 'In Progress', 'Closed'],
-    shapes: ['Square', 'Circle', 'Triangle']
+    statuses: ['Open', 'In Progress', 'Closed']
 };
 
 const TicketDashboard = () => {

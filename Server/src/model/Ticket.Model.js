@@ -42,11 +42,6 @@ const ticketSchema = new mongoose.Schema({
         },
         default: "Open"
     },
-    shape: {
-        type: String,
-        enum: ["Circle", "Square", "Triangle"],
-        default: "Circle"
-    },
     createdAt: {
         type: Date,
         default: Date.now
