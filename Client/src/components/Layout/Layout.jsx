@@ -23,7 +23,7 @@ const Layout = ({ onCreateClick }) => {
                     </div>
                 </div>
 
-                <div className="p-4 md:p-8 max-w-7xl mx-auto animate-in fade-in duration-500">
+                <div className="p-4 md:p-7 max-w-7xl mx-auto animate-in fade-in duration-500">
                     <Outlet />
                 </div>
             </main>

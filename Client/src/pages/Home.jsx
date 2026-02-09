@@ -21,7 +21,7 @@ const Home = () => {
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-2">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Welcome To Ticket Support 👋</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Welcome To Tickets Dashboard</h1>
                 <p className="text-gray-500">Here's what's happening with your tickets today.</p>
             </div>
 
