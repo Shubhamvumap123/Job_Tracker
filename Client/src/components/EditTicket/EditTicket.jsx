@@ -72,7 +72,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                         placeholder="e.g., Login page not loading"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className={inputClass}
+                        disabled={status === 'Closed'}
+                        className={`${inputClass} ${status === 'Closed' ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
+                        title={status === 'Closed' ? "Change status to Open to edit title" : ""}
                     />
                 </div>
 
@@ -83,7 +85,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                         placeholder="Describe the issue in detail..."
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className={inputClass}
+                        disabled={status === 'Closed'}
+                        className={`${inputClass} ${status === 'Closed' ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
+                        title={status === 'Closed' ? "Change status to Open to edit description" : ""}
                     />
                 </div>
 
@@ -93,7 +97,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                         <select
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
-                            className={inputClass}
+                            disabled={status === 'Closed'}
+                            className={`${inputClass} ${status === 'Closed' ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
+                            title={status === 'Closed' ? "Change status to Open to edit priority" : ""}
                         >
                             <option value="Low">Low</option>
                             <option value="Medium">Medium</option>
