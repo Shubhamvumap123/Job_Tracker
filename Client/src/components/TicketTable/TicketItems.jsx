@@ -55,7 +55,7 @@ export const TicketCard = memo(({ ticket, onEdit, onDelete }) => {
                     </button>
                 </div>
             </div>
-            <p className="text-sm text-gray-500 mb-4 line-clamp-3 flex-grow">
+            <p className="text-sm text-gray-500 mb-4 line-clamp-2 flex-grow">
                 {ticket.description}
             </p>
             <div className="flex flex-wrap gap-2 mb-4">
@@ -67,7 +67,7 @@ export const TicketCard = memo(({ ticket, onEdit, onDelete }) => {
                 </span>
             </div>
             <div className="pt-3 border-t border-gray-100 text-xs text-gray-400 flex items-center justify-between">
-                <span>Created: {new Date(ticket.createdAt).toLocaleDateString()}</span>
+                <span>Created Date: {new Date(ticket.createdAt).toLocaleDateString()}</span>
             </div>
         </div>
     );
