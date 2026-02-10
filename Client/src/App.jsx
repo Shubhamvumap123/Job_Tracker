@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home';
 import Tickets from './pages/Tickets';
+import Docs from './pages/Docs';
 import CreateTicket from './components/CreateTicket/CreateTicket';
 import { TicketProvider } from './context/TicketContext';
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Layout onCreateClick={() => setIsCreating(true)} />}>
             <Route index element={<Home />} />
             <Route path="tickets" element={<Tickets />} />
+            <Route path="docs" element={<Docs />} />
           </Route>
         </Routes>
 

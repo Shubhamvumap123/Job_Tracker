@@ -1,10 +1,11 @@
-import { Home, Ticket, PlusCircle, X } from 'lucide-react';
+import { Home, Ticket, PlusCircle, X, Book } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = ({ onCreateClick, isOpen, onClose }) => {
     const navItems = [
         { icon: Home, label: 'Dashboard', path: '/' },
         { icon: Ticket, label: 'All Tickets', path: '/tickets' },
+        { icon: Book, label: 'Documentation', path: '/docs' },
     ];
 
     const sidebarClasses = `
