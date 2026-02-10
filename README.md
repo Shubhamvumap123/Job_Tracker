@@ -96,7 +96,7 @@ Ticket_Support/
 3.  **Configuration**: Ensure a `.env` file exists in `Server/` with the following content (or modify `src/config/config.js` directly if not using dotenv):
     ```env
     PORT=5000
-    MONGO_URI=mongodb://localhost:27017/ticket_db
+    MONGO_URI=mongodb+srv://shubhamvumap_db_user:Password123@cluster0.xxktdey.mongodb.net/
     ```
 4.  Start the server:
     ```bash
