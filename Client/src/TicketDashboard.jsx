@@ -3,7 +3,7 @@ import { useTickets } from './hooks/useTickets';
 import FilterBar from './components/Filters/FilterBar';
 import TicketList from './components/TicketTable/TicketList';
 import { Loader2, AlertCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Configuration constants
 const OPTIONS = {
@@ -15,14 +15,21 @@ const TicketDashboard = () => {
     // using custom hook to manage ticket data and state
     const { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket } = useTickets();
     const [editingTicket, setEditingTicket] = useState(null);
-    const [viewMode, setViewMode] = useState('list');
+
+    // Initialize view mode from local storage or default to 'list'
+    const [viewMode, setViewMode] = useState(() => localStorage.getItem('ticketViewMode') || 'list');
+
+    // Automatically save view mode preference whenever it changes
+    useEffect(() => {
+        localStorage.setItem('ticketViewMode', viewMode);
+    }, [viewMode]);
 
     // wrapper to handle ticket updates and close modal on success
     const handleUpdate = async (id, data) => {
         const result = await updateTicket(id, data);
         if (result.success) {
             setEditingTicket(null);
-            window.location.reload();
+            // window.location.reload(); // Removed to prevent full page reload
         }
         return result;
     };
