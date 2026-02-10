@@ -45,11 +45,23 @@ export const useTickets = () => {
         }
     };
 
+    // handle ticket creation
+    const createTicket = async (ticketData) => {
+        try {
+            await ticketService.create(ticketData);
+            fetchTickets(); // Refresh list to respect current filters/sort
+            return { success: true };
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || "Could not create ticket";
+            return { success: false, error: errorMessage };
+        }
+    };
+
     // handle ticket updates and refresh list
     const updateTicket = async (id, updatedData) => {
         try {
             await ticketService.update(id, updatedData);
-            fetchTickets();
+            fetchTickets(); // Refetch to ensure sorted order/server logic if any
             return { success: true };
         } catch (err) {
             const errorMessage = err.response?.data?.error || "Could not update ticket";
@@ -62,5 +74,5 @@ export const useTickets = () => {
         setFilters(prev => ({ ...prev, [key]: value }));
     };
 
-    return { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket };
+    return { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket, createTicket };
 };

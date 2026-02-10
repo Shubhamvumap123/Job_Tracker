@@ -1,5 +1,5 @@
 import EditTicket from './components/EditTicket/EditTicket';
-import { useTickets } from './hooks/useTickets';
+import { useTicketContext } from './context/TicketContext';
 import FilterBar from './components/Filters/FilterBar';
 import TicketList from './components/TicketTable/TicketList';
 import { Loader2, AlertCircle } from 'lucide-react';
@@ -13,7 +13,7 @@ const OPTIONS = {
 
 const TicketDashboard = () => {
     // using custom hook to manage ticket data and state
-    const { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket } = useTickets();
+    const { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket } = useTicketContext();
     const [editingTicket, setEditingTicket] = useState(null);
 
     // Initialize view mode from local storage or default to 'list'
@@ -29,7 +29,6 @@ const TicketDashboard = () => {
         const result = await updateTicket(id, data);
         if (result.success) {
             setEditingTicket(null);
-            // window.location.reload(); // Removed to prevent full page reload
         }
         return result;
     };

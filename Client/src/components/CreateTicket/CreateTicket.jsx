@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { ticketService } from '../../API/ticketService';
+import { useTicketContext } from '../../context/TicketContext';
 import { X } from 'lucide-react';
 
 const CreateTicket = ({ onClose }) => {
+    const { createTicket } = useTicketContext();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [priority, setPriority] = useState("Low");
@@ -11,25 +12,25 @@ const CreateTicket = ({ onClose }) => {
     const [error, setError] = useState(null);
 
     // handle form submission
-    const handleCreateTicket = () => {
+    const handleCreateTicket = async () => {
         setIsSubmitting(true);
         setError(null);
-        ticketService.create({
+
+        const result = await createTicket({
             title,
             description,
             priority,
             status
-        }).then((response) => {
-            console.log(response);
+        });
+
+        if (result.success) {
             setIsSubmitting(false);
             onClose();
-            window.location.reload();
-        }).catch(err => {
-            console.error(err);
-            const errorMessage = err.response?.data?.error || "Failed to create ticket";
-            setError(errorMessage);
+            // No reload needed! Context updates automatically
+        } else {
+            setError(result.error);
             setIsSubmitting(false);
-        });
+        }
     }
 
     const inputClass = "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all";

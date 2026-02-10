@@ -1,10 +1,10 @@
 import { Ticket, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useTickets } from '../hooks/useTickets';
+import { useTicketContext } from '../context/TicketContext';
 
 const Home = () => {
     const navigate = useNavigate();
-    const { tickets } = useTickets();
+    const { tickets } = useTicketContext();
 
     // calculate quick statistics for the dashboard
     const totalTickets = tickets.length;

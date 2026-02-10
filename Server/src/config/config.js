@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // use local db as fallback if env variable is missing
-const uri = process.env.MONGO_URL || "mongodb://localhost:27017";
+const uri = process.env.MONGO_URL || "mongodb+srv://shubhamvumap_db_user:Password123@cluster0.xxktdey.mongodb.net/";
 
 const connectDB = async () => {
     try {
