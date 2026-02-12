@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Search, LayoutList, LayoutGrid } from 'lucide-react';
 
 const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) => {
@@ -57,4 +57,4 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
     );
 };
 
-export default memo(FilterBar);
+export default FilterBar;
