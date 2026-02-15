@@ -93,10 +93,14 @@ Ticket_Support/
     ```bash
     npm install
     ```
-3.  **Configuration**: Ensure a `.env` file exists in `Server/` with the following content (or modify `src/config/config.js` directly if not using dotenv):
+3.  **Configuration**: Create a `.env` file in `Server/` by copying the example file:
+    ```bash
+    cp .env.example .env
+    ```
+    Then update the `.env` file with your MongoDB connection string and port:
     ```env
     PORT=5000
-    MONGO_URI=mongodb+srv://shubhamvumap_db_user:Password123@cluster0.xxktdey.mongodb.net/
+    MONGO_URI=your_mongodb_connection_string
     ```
 4.  Start the server:
     ```bash
