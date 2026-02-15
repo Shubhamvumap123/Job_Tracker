@@ -53,5 +53,8 @@ const ticketSchema = new mongoose.Schema({
     }
 });
 
+// Index for optimizing default sort order (createdAt: -1)
+ticketSchema.index({ createdAt: -1 });
+
 const Ticket = mongoose.model("Ticket", ticketSchema);
 module.exports = Ticket;
