@@ -79,5 +79,8 @@ ticketSchema.pre('save', function (next) {
     }
 });
 
+// Optimize default sorting by creation date
+ticketSchema.index({ createdAt: -1 });
+
 const Ticket = mongoose.model("Ticket", ticketSchema);
 module.exports = Ticket;
