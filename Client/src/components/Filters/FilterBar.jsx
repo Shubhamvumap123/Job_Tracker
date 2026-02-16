@@ -15,6 +15,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                     value={filters.search || ''}
                     onChange={(e) => onFilterChange('search', e.target.value)}
                     className="w-full sm:w-64 pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    aria-label="Search tickets"
                 />
             </div>
 
@@ -22,6 +23,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                 value={filters.priority}
                 onChange={(e) => onFilterChange('priority', e.target.value)}
                 className="w-full sm:w-auto px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                aria-label="Filter by priority"
             >
                 <option value="">All Priorities</option>
                 {options.priorities.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -31,6 +33,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                 value={filters.status}
                 onChange={(e) => onFilterChange('status', e.target.value)}
                 className="w-full sm:w-auto px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                aria-label="Filter by status"
             >
                 <option value="">All Statuses</option>
                 {options.statuses.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -42,6 +45,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
                     title="List View"
+                    aria-label="List View"
                 >
                     <LayoutList size={18} />
                 </button>
@@ -49,6 +53,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
                     title="Grid View"
+                    aria-label="Grid View"
                 >
                     <LayoutGrid size={18} />
                 </button>
