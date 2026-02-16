@@ -52,7 +52,7 @@ export const useTickets = () => {
             fetchTickets(); // Refresh list to respect current filters/sort
             return { success: true };
         } catch (err) {
-            const errorMessage = err.response?.data?.error || "Could not create ticket";
+            const errorMessage = err.response?.data?.message || err.response?.data?.error || "Could not create ticket";
             return { success: false, error: errorMessage };
         }
     };
@@ -64,7 +64,7 @@ export const useTickets = () => {
             fetchTickets(); // Refetch to ensure sorted order/server logic if any
             return { success: true };
         } catch (err) {
-            const errorMessage = err.response?.data?.error || "Could not update ticket";
+            const errorMessage = err.response?.data?.message || err.response?.data?.error || "Could not update ticket";
             return { success: false, error: errorMessage };
         }
     };

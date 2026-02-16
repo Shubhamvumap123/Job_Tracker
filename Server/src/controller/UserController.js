@@ -61,6 +61,10 @@ const registerUser = async (req, res) => {
         }
     } catch (error) {
         console.error("Register Error:", error);
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({ message: messages.join(', ') });
+        }
         res.status(500).json({ message: 'Server Error: ' + error.message });
     }
 };

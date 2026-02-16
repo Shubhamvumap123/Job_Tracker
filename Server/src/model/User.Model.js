@@ -23,13 +23,19 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'manager', 'agent', 'customer'],
+        enum: {
+            values: ['admin', 'manager', 'agent', 'customer'],
+            message: "Role must be admin, manager, agent, or customer"
+        },
         default: 'customer'
     },
     // Enterprise Features
     department: {
         type: String,
-        enum: ['IT', 'HR', 'Sales', 'General'],
+        enum: {
+            values: ['IT', 'HR', 'Sales', 'General'],
+            message: "Department must be IT, HR, Sales, or General"
+        },
         default: 'General'
     },
     skills: [{

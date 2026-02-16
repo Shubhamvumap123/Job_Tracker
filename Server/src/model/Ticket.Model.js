@@ -15,18 +15,27 @@ const ticketSchema = new mongoose.Schema({
     },
     priority: {
         type: String,
-        enum: ["Low", "Medium", "High", "Critical"],
+        enum: {
+            values: ["Low", "Medium", "High", "Critical"],
+            message: "Priority must be Low, Medium, High, or Critical"
+        },
         default: "Low"
     },
     status: {
         type: String,
-        enum: ["New", "Open", "In Progress", "On Hold", "Resolved", "Closed"],
+        enum: {
+            values: ["New", "Open", "In Progress", "On Hold", "Resolved", "Closed"],
+            message: "Status must be New, Open, In Progress, On Hold, Resolved, or Closed"
+        },
         default: "New"
     },
     // Enterprise Features
     channel: {
         type: String,
-        enum: ["Web", "Email", "Chat", "Phone", "Social", "API"],
+        enum: {
+            values: ["Web", "Email", "Chat", "Phone", "Social", "API"],
+            message: "Channel must be valid (Web, Email, Chat, etc.)"
+        },
         default: "Web"
     },
     tags: [{
@@ -34,7 +43,7 @@ const ticketSchema = new mongoose.Schema({
     }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        required: [true, "Ticket must belong to a user"],
         ref: 'User' // The REQUESTER
     },
     assignedTo: {

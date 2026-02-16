@@ -43,9 +43,9 @@ const createTicket = async (req, res) => {
     } catch (error) {
         if (error.name === 'ValidationError') {
             const messages = Object.values(error.errors).map(val => val.message);
-            return res.status(400).json({ error: messages.join(', ') });
+            return res.status(400).json({ message: messages.join(', ') });
         }
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Server Error: ' + error.message });
     }
 };
 
@@ -83,7 +83,7 @@ const getTicketList = async (req, res) => {
 
         res.status(200).json({ success: true, tickets });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Server Error: ' + error.message });
     }
 };
 
@@ -93,13 +93,13 @@ const updateTicket = async (req, res) => {
         const ticket = await Ticket.findById(req.params.id);
 
         if (!ticket) {
-            return res.status(404).json({ error: "Ticket not found" });
+            return res.status(404).json({ message: "Ticket not found" });
         }
 
         // Check ownership/permissions
         // Customers can only update their own tickets (and maybe only reopen?)
         if (req.user.role === 'customer' && ticket.user.toString() !== req.user.id) {
-            return res.status(401).json({ error: 'User not authorized' });
+            return res.status(401).json({ message: 'User not authorized' });
         }
 
         const { title, description, priority, status, assignedTo, department } = req.body;
@@ -122,7 +122,11 @@ const updateTicket = async (req, res) => {
 
         res.status(200).json(updatedTicket);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({ message: messages.join(', ') });
+        }
+        res.status(500).json({ message: 'Server Error: ' + error.message });
     }
 };
 
@@ -132,16 +136,18 @@ const deleteTicket = async (req, res) => {
         const ticket = await Ticket.findById(req.params.id);
 
         if (!ticket) {
-            return res.status(404).json({ error: "Ticket not found" });
+            return res.status(404).json({ message: "Ticket not found" });
         }
 
         // Allow Admin or the Ticket Owner to delete
         // Check if ticket.user exists to avoid crash on old data
         const isOwner = ticket.user && ticket.user.toString() === req.user.id;
         const isAdmin = req.user.role === 'admin';
+        // Allow deletion if ticket has no owner (orphan cleanup)
+        const isOrphan = !ticket.user;
 
-        if (!isAdmin && !isOwner) {
-            return res.status(401).json({ error: 'Only Admins or Ticket Owners can delete tickets' });
+        if (!isAdmin && !isOwner && !isOrphan) {
+            return res.status(401).json({ message: 'Only Admins or Ticket Owners can delete tickets' });
         }
 
         await ticket.deleteOne();
@@ -152,7 +158,7 @@ const deleteTicket = async (req, res) => {
 
         res.status(200).json({ id: req.params.id });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Server Error: ' + error.message });
     }
 };
 

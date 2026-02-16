@@ -1,5 +1,6 @@
 import React from 'react';
 import { TicketRow, TicketCard } from './TicketItems';
+import { FileQuestion } from 'lucide-react';
 
 const TicketList = ({ viewMode, tickets, onEdit, onDelete }) => {
 
@@ -9,7 +10,13 @@ const TicketList = ({ viewMode, tickets, onEdit, onDelete }) => {
             <div className="flex-1 overflow-y-auto min-h-0 pr-2">
 
                 {/* Render list or grid view based on preference */}
-                {viewMode === 'list' ? (
+                {tickets.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-64 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
+                        <FileQuestion className="w-12 h-12 mb-2 text-gray-300" />
+                        <h3 className="text-lg font-medium text-gray-900">No tickets found</h3>
+                        <p className="text-sm">Create a new ticket to get started.</p>
+                    </div>
+                ) : viewMode === 'list' ? (
                     <div className="border border-gray-200 rounded-lg shadow-sm bg-white">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50 sticky top-0 z-10 shadow-sm">
