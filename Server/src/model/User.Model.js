@@ -19,12 +19,36 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please add a password'],
         minlength: 6,
-        select: false // Don't return password by default
+        select: false
     },
     role: {
         type: String,
-        enum: ['user', 'agent', 'admin'],
-        default: 'user'
+        enum: ['admin', 'manager', 'agent', 'customer'],
+        default: 'customer'
+    },
+    // Enterprise Features
+    department: {
+        type: String,
+        enum: ['IT', 'HR', 'Sales', 'General'],
+        default: 'General'
+    },
+    skills: [{
+        type: String // e.g., 'Javascript', 'Billing', 'Hardware'
+    }],
+    availability: {
+        status: {
+            type: String,
+            enum: ['Available', 'Busy', 'Offline', 'On Break'],
+            default: 'Offline'
+        },
+        lastSeen: Date
+    },
+    settings: {
+        notifications: {
+            email: { type: Boolean, default: true },
+            browser: { type: Boolean, default: true }
+        },
+        theme: { type: String, default: 'light' }
     },
     createdAt: {
         type: Date,
@@ -37,7 +61,6 @@ userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         next();
     }
-
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 });

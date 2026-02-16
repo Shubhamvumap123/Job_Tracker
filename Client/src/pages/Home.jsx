@@ -1,20 +1,42 @@
 import { Ticket, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTicketContext } from '../context/TicketContext';
+import { useSocket } from '../context/SocketContext';
+import { useEffect } from 'react';
 
 const Home = () => {
     const navigate = useNavigate();
-    const { tickets } = useTicketContext();
+    const { tickets, fetchTickets } = useTicketContext(); // We should use fetchTickets to refresh
+    const socket = useSocket();
+
+    // Real-time updates
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleTicketUpdate = () => {
+            fetchTickets(); // Refresh data on any ticket event
+        };
+
+        socket.on('ticket_created', handleTicketUpdate);
+        socket.on('ticket_updated', handleTicketUpdate);
+        socket.on('ticket_deleted', handleTicketUpdate);
+
+        return () => {
+            socket.off('ticket_created', handleTicketUpdate);
+            socket.off('ticket_updated', handleTicketUpdate);
+            socket.off('ticket_deleted', handleTicketUpdate);
+        };
+    }, [socket, fetchTickets]);
 
     // calculate quick statistics for the dashboard
     const totalTickets = tickets.length;
-    const openTickets = tickets.filter(t => t.status === 'Open').length;
+    const openTickets = tickets.filter(t => t.status === 'Open' || t.status === 'New').length;
     const inProgressTickets = tickets.filter(t => t.status === 'In Progress').length;
     const resolvedTickets = tickets.filter(t => ['Closed', 'Resolved'].includes(t.status)).length;
 
     const stats = [
         { label: 'Total Tickets', value: totalTickets, icon: Ticket, color: 'bg-blue-500' },
-        { label: 'Open', value: openTickets, icon: AlertCircle, color: 'bg-yellow-500' },
+        { label: 'Active', value: openTickets, icon: AlertCircle, color: 'bg-yellow-500' },
         { label: 'In Progress', value: inProgressTickets, icon: Clock, color: 'bg-indigo-500' },
         { label: 'Closed', value: resolvedTickets, icon: CheckCircle, color: 'bg-green-500' },
     ];

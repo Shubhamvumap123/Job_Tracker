@@ -8,22 +8,34 @@ const generateToken = (id) => {
     });
 };
 
-// @desc    Register new user
+// @desc    Register new user (Customer by default, or specific role if Admin)
 // @route   POST /api/users
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role, department, skills } = req.body;
 
+        // 1. Basic Validation
         if (!name || !email || !password) {
-            return res.status(400).json({ message: 'Please add all fields' });
+            return res.status(400).json({ message: 'Please add all required fields (name, email, password)' });
         }
 
-        // Check if user exists
+        // 2. Email Format Validation
+        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Please provide a valid email address' });
+        }
+
+        // 3. Password Strength Validation
+        if (password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+        }
+
+        // 4. Check if user exists
         const userExists = await User.findOne({ email });
 
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'User with this email already exists' });
         }
 
         // Create user
@@ -31,7 +43,9 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'user'
+            role: role || 'customer', // Default to customer
+            department: department || 'General',
+            skills: skills || []
         });
 
         if (user) {
@@ -46,7 +60,8 @@ const registerUser = async (req, res) => {
             res.status(400).json({ message: 'Invalid user data' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Register Error:", error);
+        res.status(500).json({ message: 'Server Error: ' + error.message });
     }
 };
 
@@ -57,22 +72,35 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Please provide both email and password' });
+        }
+
         // Check for user email
         const user = await User.findOne({ email }).select('+password');
 
         if (user && (await user.matchPassword(password))) {
+            // Update availability to 'Available' on login if agent
+            if (['agent', 'admin'].includes(user.role)) {
+                user.availability = { status: 'Available', lastSeen: Date.now() };
+                await user.save();
+            }
+
             res.json({
                 _id: user.id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                department: user.department,
+                skills: user.skills,
                 token: generateToken(user._id),
             });
         } else {
-            res.status(401).json({ message: 'Invalid credentials' });
+            res.status(401).json({ message: 'Invalid email or password' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Login Error:", error);
+        res.status(500).json({ message: 'Server Error: ' + error.message });
     }
 };
 
@@ -88,8 +116,22 @@ const getMe = async (req, res) => {
     }
 };
 
+// @desc    Get all agents (for assignment)
+// @route   GET /api/users/agents
+// @access  Private (Admin/Manager)
+const getAgents = async (req, res) => {
+    try {
+        const agents = await User.find({ role: { $in: ['agent', 'admin', 'manager'] } })
+            .select('-password');
+        res.status(200).json(agents);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     getMe,
+    getAgents
 };
