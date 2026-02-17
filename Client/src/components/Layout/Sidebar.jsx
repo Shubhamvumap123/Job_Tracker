@@ -1,5 +1,6 @@
-import { Home, Ticket, PlusCircle, X, Book } from 'lucide-react';
+import { Home, Ticket, PlusCircle, X, Book, LogOut } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = ({ onCreateClick, isOpen, onClose }) => {
     const navItems = [
@@ -13,6 +14,8 @@ const Sidebar = ({ onCreateClick, isOpen, onClose }) => {
     md:translate-x-0 md:static md:h-screen md:shadow-none
     ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
   `;
+
+    const { logout } = useAuth();
 
     return (
         <>
@@ -65,6 +68,13 @@ const Sidebar = ({ onCreateClick, isOpen, onClose }) => {
                     </nav>
 
                     <div className="p-4 border-t border-slate-800">
+                        <button
+                            onClick={logout}
+                            className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all duration-200 group"
+                        >
+                            <LogOut size={20} className="transition-transform group-hover:scale-110 duration-200" />
+                            Sign Out
+                        </button>
                     </div>
                 </div>
             </aside>
