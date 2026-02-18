@@ -42,6 +42,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
                     title="List View"
+                    aria-label="Switch to list view"
                 >
                     <LayoutList size={18} />
                 </button>
@@ -49,6 +50,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
                     title="Grid View"
+                    aria-label="Switch to grid view"
                 >
                     <LayoutGrid size={18} />
                 </button>
