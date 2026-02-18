@@ -43,7 +43,9 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
+            // 🛡️ Security: Force role to 'customer' to prevent privilege escalation.
+            // Admins must be created via seed scripts or direct DB access.
+            role: 'customer',
             department: department || 'General',
             skills: skills || []
         });
