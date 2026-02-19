@@ -88,5 +88,12 @@ ticketSchema.pre('save', function (next) {
     }
 });
 
+// Indexes for performance optimization on common queries
+ticketSchema.index({ createdAt: -1 }); // Default sort
+ticketSchema.index({ status: 1, createdAt: -1 }); // Filter by status + sort
+ticketSchema.index({ priority: 1, createdAt: -1 }); // Filter by priority + sort
+ticketSchema.index({ user: 1, createdAt: -1 }); // Customer tickets + sort
+ticketSchema.index({ assignedTo: 1, createdAt: -1 }); // Agent tickets + sort
+
 const Ticket = mongoose.model("Ticket", ticketSchema);
 module.exports = Ticket;
