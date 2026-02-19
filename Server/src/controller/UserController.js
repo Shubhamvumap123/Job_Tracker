@@ -43,7 +43,7 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
+            role: 'customer', // Force customer role for public registration to prevent privilege escalation
             department: department || 'General',
             skills: skills || []
         });
