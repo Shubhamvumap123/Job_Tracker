@@ -54,7 +54,7 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
         <div className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Edit Ticket</h2>
-                <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+                <button onClick={onClose} aria-label="Close" className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
                     <X size={20} />
                 </button>
             </div>
@@ -66,8 +66,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                     </div>
                 )}
                 <div>
-                    <label className={labelClass}>Title</label>
+                    <label htmlFor="edit-ticket-title" className={labelClass}>Title</label>
                     <input
+                        id="edit-ticket-title"
                         type="text"
                         placeholder="e.g., Login page not loading"
                         value={title}
@@ -79,8 +80,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                 </div>
 
                 <div>
-                    <label className={labelClass}>Description</label>
+                    <label htmlFor="edit-ticket-description" className={labelClass}>Description</label>
                     <textarea
+                        id="edit-ticket-description"
                         rows={4}
                         placeholder="Describe the issue in detail..."
                         value={description}
@@ -93,8 +95,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className={labelClass}>Priority</label>
+                        <label htmlFor="edit-ticket-priority" className={labelClass}>Priority</label>
                         <select
+                            id="edit-ticket-priority"
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
                             disabled={status === 'Closed'}
@@ -107,8 +110,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                         </select>
                     </div>
                     <div>
-                        <label className={labelClass}>Status</label>
+                        <label htmlFor="edit-ticket-status" className={labelClass}>Status</label>
                         <select
+                            id="edit-ticket-status"
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
                             className={inputClass}
