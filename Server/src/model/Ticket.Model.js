@@ -80,6 +80,14 @@ const ticketSchema = new mongoose.Schema({
     }
 });
 
+// Indexes for performance optimization
+ticketSchema.index({ status: 1, createdAt: -1 });
+ticketSchema.index({ priority: 1, createdAt: -1 });
+ticketSchema.index({ department: 1, createdAt: -1 });
+ticketSchema.index({ assignedTo: 1, createdAt: -1 });
+ticketSchema.index({ user: 1, createdAt: -1 });
+ticketSchema.index({ createdAt: -1 });
+
 // Middleware to update 'updatedAt'
 ticketSchema.pre('save', function (next) {
     this.updatedAt = Date.now();
