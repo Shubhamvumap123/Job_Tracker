@@ -79,7 +79,8 @@ const getTicketList = async (req, res) => {
         const tickets = await Ticket.find(filter)
             .populate('user', 'name email')
             .populate('assignedTo', 'name email')
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .lean(); // Performance: return plain JS objects instead of Mongoose documents
 
         res.status(200).json({ success: true, tickets });
     } catch (error) {
