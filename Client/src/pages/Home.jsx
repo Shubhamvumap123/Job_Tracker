@@ -9,24 +9,8 @@ const Home = () => {
     const { tickets, fetchTickets } = useTicketContext(); // We should use fetchTickets to refresh
     const socket = useSocket();
 
-    // Real-time updates
-    useEffect(() => {
-        if (!socket) return;
+    // Real-time updates are now handled globally in TicketContext
 
-        const handleTicketUpdate = () => {
-            fetchTickets(); // Refresh data on any ticket event
-        };
-
-        socket.on('ticket_created', handleTicketUpdate);
-        socket.on('ticket_updated', handleTicketUpdate);
-        socket.on('ticket_deleted', handleTicketUpdate);
-
-        return () => {
-            socket.off('ticket_created', handleTicketUpdate);
-            socket.off('ticket_updated', handleTicketUpdate);
-            socket.off('ticket_deleted', handleTicketUpdate);
-        };
-    }, [socket, fetchTickets]);
 
     // calculate quick statistics for the dashboard
     const totalTickets = tickets.length;

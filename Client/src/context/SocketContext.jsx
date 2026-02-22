@@ -14,8 +14,16 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if (user) {
+            // Determine socket URL based on environment
+            const isLocal = window.location.hostname === 'localhost';
+            const socketUrl = isLocal
+                ? 'http://localhost:5000'
+                : 'https://ticket-support11.onrender.com';
+
+            console.log(`Initializing socket connection to: ${socketUrl}`);
+
             // Initialize socket connection
-            const newSocket = io('https://ticket-support11.onrender.com');
+            const newSocket = io(socketUrl);
             setSocket(newSocket);
 
             newSocket.on('connect', () => {

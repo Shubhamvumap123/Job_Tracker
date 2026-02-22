@@ -1,5 +1,10 @@
 import axios from 'axios';
-const API_URL = "https://ticket-support11.onrender.com/api/tickets";
+const isLocal = window.location.hostname === 'localhost';
+const API_BASE_URL = isLocal
+    ? "http://localhost:5000"
+    : "https://ticket-support11.onrender.com";
+
+const API_URL = `${API_BASE_URL}/api/tickets`;
 
 // Helper to get auth header
 const getAuthHeader = () => {
