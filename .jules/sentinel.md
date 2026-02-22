@@ -1,0 +1,4 @@
+## 2026-02-22 - [Privilege Escalation via Mass Assignment]
+**Vulnerability:** A critical Privilege Escalation vulnerability was found in the `registerUser` function in `Server/src/controller/UserController.js`. The function allowed users to specify their `role` and `department` in the request body, which were then directly passed to `User.create`. This allowed any user to register as an 'admin'.
+**Learning:** The application logic explicitly ignored secure defaults (`role: role || 'customer'`) and instead favored user input, which is dangerous for sensitive fields.
+**Prevention:** Always enforce strict role assignment logic on the server-side, especially for public registration endpoints. Never trust user input for sensitive fields like `role` or `permissions`. Use whitelisting for allowed fields or hardcode safe defaults.

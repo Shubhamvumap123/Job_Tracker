@@ -43,9 +43,9 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
-            skills: skills || []
+            role: 'customer', // Sentinel: Enforce customer role to prevent privilege escalation
+            department: 'General', // Sentinel: Enforce General department
+            skills: []
         });
 
         if (user) {
