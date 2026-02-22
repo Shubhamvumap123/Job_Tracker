@@ -5,7 +5,7 @@ let io;
 const initSocket = (server) => {
     io = socketIo(server, {
         cors: {
-            origin: ["http://localhost:5173", "http://localhost:5174"], // Allow both dev ports
+            origin: ["http://localhost:5173", "http://localhost:5174", "https://ticket-support-orsjn.vercel.app"], // Allow dev and vercel
             methods: ["GET", "POST"]
         }
     });
