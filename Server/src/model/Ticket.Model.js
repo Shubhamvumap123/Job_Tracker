@@ -88,5 +88,13 @@ ticketSchema.pre('save', function (next) {
     }
 });
 
+// Indexes for performance optimization
+ticketSchema.index({ status: 1, createdAt: -1 });
+ticketSchema.index({ priority: 1, createdAt: -1 });
+ticketSchema.index({ user: 1, createdAt: -1 });
+ticketSchema.index({ assignedTo: 1, createdAt: -1 });
+ticketSchema.index({ department: 1, createdAt: -1 });
+ticketSchema.index({ createdAt: -1 });
+
 const Ticket = mongoose.model("Ticket", ticketSchema);
 module.exports = Ticket;
