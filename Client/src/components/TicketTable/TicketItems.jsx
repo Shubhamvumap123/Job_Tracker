@@ -4,7 +4,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { PRIORITY_COLORS, STATUS_STYLES } from './constants'; // Import shared styles
 
 // 1. The List View Component (Row)
-export const TicketRow = ({ ticket, onEdit, onDelete }) => {
+export const TicketRow = React.memo(({ ticket, onEdit, onDelete }) => {
     return (
         <tr className="hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 group">
             <td className="px-6 py-4 text-sm font-medium text-gray-900">{ticket.title}</td>
@@ -36,10 +36,10 @@ export const TicketRow = ({ ticket, onEdit, onDelete }) => {
             </td>
         </tr>
     );
-};
+});
 
 // 2. The Grid View Component (Card)
-export const TicketCard = ({ ticket, onEdit, onDelete }) => {
+export const TicketCard = React.memo(({ ticket, onEdit, onDelete }) => {
     return (
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
             <div className="flex justify-between items-start mb-3">
@@ -71,4 +71,4 @@ export const TicketCard = ({ ticket, onEdit, onDelete }) => {
             </div>
         </div>
     );
-};
+});

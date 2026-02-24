@@ -3,7 +3,7 @@ import { useTicketContext } from './context/TicketContext';
 import FilterBar from './components/Filters/FilterBar';
 import TicketList from './components/TicketTable/TicketList';
 import { Loader2, AlertCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Configuration constants
 const OPTIONS = {
@@ -33,6 +33,15 @@ const TicketDashboard = () => {
         return result;
     };
 
+    // Memoized handlers to prevent unnecessary re-renders of TicketList
+    const handleEdit = useCallback((ticket) => {
+        setEditingTicket(ticket);
+    }, []);
+
+    const handleDelete = useCallback((id) => {
+        removeTicket(id);
+    }, [removeTicket]);
+
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center h-64 text-red-500 gap-2">
@@ -61,8 +70,8 @@ const TicketDashboard = () => {
                         <TicketList
                             viewMode={viewMode}
                             tickets={tickets}
-                            onEdit={(ticket) => setEditingTicket(ticket)}
-                            onDelete={(id) => removeTicket(id)}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
                         />
                     </div>
 
