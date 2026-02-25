@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTicketContext } from '../../context/TicketContext';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 
 const CreateTicket = ({ onClose }) => {
     const { createTicket } = useTicketContext();
@@ -12,7 +12,8 @@ const CreateTicket = ({ onClose }) => {
     const [error, setError] = useState(null);
 
     // handle form submission
-    const handleCreateTicket = async () => {
+    const handleCreateTicket = async (e) => {
+        e.preventDefault();
         setIsSubmitting(true);
         setError(null);
 
@@ -37,10 +38,15 @@ const CreateTicket = ({ onClose }) => {
     const labelClass = "block text-sm font-medium text-gray-700 mb-1";
 
     return (
-        <div className="flex flex-col h-full">
+        <form onSubmit={handleCreateTicket} className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Create New Ticket</h2>
-                <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close"
+                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                >
                     <X size={20} />
                 </button>
             </div>
@@ -52,31 +58,36 @@ const CreateTicket = ({ onClose }) => {
                     </div>
                 )}
                 <div>
-                    <label className={labelClass}>Title</label>
+                    <label htmlFor="ticket-title" className={labelClass}>Title</label>
                     <input
+                        id="ticket-title"
                         type="text"
                         placeholder="e.g., Login page not loading"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className={inputClass}
+                        required
                     />
                 </div>
 
                 <div>
-                    <label className={labelClass}>Description</label>
+                    <label htmlFor="ticket-description" className={labelClass}>Description</label>
                     <textarea
+                        id="ticket-description"
                         rows={4}
                         placeholder="Describe the issue in detail..."
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className={inputClass}
+                        required
                     />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className={labelClass}>Priority</label>
+                        <label htmlFor="ticket-priority" className={labelClass}>Priority</label>
                         <select
+                            id="ticket-priority"
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
                             className={inputClass}
@@ -87,8 +98,9 @@ const CreateTicket = ({ onClose }) => {
                         </select>
                     </div>
                     <div>
-                        <label className={labelClass}>Status</label>
+                        <label htmlFor="ticket-status" className={labelClass}>Status</label>
                         <select
+                            id="ticket-status"
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
                             className={inputClass}
@@ -103,20 +115,21 @@ const CreateTicket = ({ onClose }) => {
 
             <div className="mt-8 flex items-center justify-end gap-3">
                 <button
+                    type="button"
                     onClick={onClose}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                 >
                     Cancel
                 </button>
                 <button
-                    onClick={handleCreateTicket}
+                    type="submit"
                     disabled={isSubmitting || !title || !description}
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {isSubmitting ? 'Creating...' : 'Create Ticket'}
+                    {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Creating...</> : 'Create Ticket'}
                 </button>
             </div>
-        </div>
+        </form>
     )
 }
 
