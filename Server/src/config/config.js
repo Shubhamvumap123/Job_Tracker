@@ -2,8 +2,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
-// use local db as fallback if env variable is missing
-const uri = process.env.MONGO_URL || "mongodb+srv://shubhamvumap_db_user:Password123@cluster0.xxktdey.mongodb.net/";
+// Require MONGO_URL to be set
+const uri = process.env.MONGO_URL;
+
+if (!uri) {
+    console.error('Error: MONGO_URL environment variable is not defined.');
+    process.exit(1);
+}
 
 const connectDB = async () => {
     try {
