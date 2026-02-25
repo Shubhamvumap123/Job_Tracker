@@ -74,6 +74,7 @@ const TicketDashboard = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl p-6 mx-4 animate-in zoom-in-95 duration-200">
                         <EditTicket
+                            key={editingTicket._id}
                             ticket={editingTicket}
                             onClose={() => setEditingTicket(null)}
                             onUpdate={handleUpdate}

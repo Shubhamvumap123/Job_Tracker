@@ -74,5 +74,5 @@ export const useTickets = () => {
         setFilters(prev => ({ ...prev, [key]: value }));
     };
 
-    return { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket, createTicket };
+    return { tickets, loading, error, filters, handleFilterChange, removeTicket, updateTicket, createTicket, fetchTickets };
 };

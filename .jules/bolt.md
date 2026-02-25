@@ -1,0 +1,3 @@
+## 2024-05-22 - [Broken Hook Export causing Runtime Crash]
+**Learning:** The `useTickets` hook was used by `TicketContext` which expected `fetchTickets` to be available for real-time updates via Socket.IO. However, `useTickets` did not return `fetchTickets`, leading to a runtime crash when a socket event was received. This highlights the importance of verifying hook contracts, especially for methods used in side-effects or event handlers that might not be exercised in the main render path.
+**Action:** Always verify that custom hooks expose all methods required by their consumers, particularly context providers that integrate with external event sources.

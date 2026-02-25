@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { X } from 'lucide-react';
 
 const EditTicket = ({ ticket, onClose, onUpdate }) => {
@@ -7,16 +7,6 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
     const [priority, setPriority] = useState(ticket?.priority || "Low");
     const [status, setStatus] = useState(ticket?.status || "Open");
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // pre-fill form when ticket data is available
-    useEffect(() => {
-        if (ticket) {
-            setTitle(ticket.title);
-            setDescription(ticket.description);
-            setPriority(ticket.priority);
-            setStatus(ticket.status);
-        }
-    }, [ticket]);
 
     const [error, setError] = useState(null);
 
