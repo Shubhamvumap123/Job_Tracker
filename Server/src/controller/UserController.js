@@ -43,8 +43,8 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
+            role: 'customer', // Enforce customer role for public registration
+            department: 'General', // Enforce General department for public registration
             skills: skills || []
         });
 

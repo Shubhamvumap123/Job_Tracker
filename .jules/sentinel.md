@@ -1,0 +1,4 @@
+## 2026-02-26 - Mass Assignment Vulnerability in User Registration
+**Vulnerability:** The `registerUser` controller blindly accepted `role` and `department` fields from the request body (`req.body`), allowing any public user to escalate privileges to 'admin' by simply including `role: "admin"` in the JSON payload.
+**Learning:** Default parameter values (e.g., `role = role || 'customer'`) are insufficient security controls when the input source is untrusted (`req.body`). The application must explicitly enforce role assignment logic on the server side, especially for public endpoints.
+**Prevention:** Never trust client input for sensitive fields. Use strict whitelisting or hardcoded values for public registration flows. Ensure that administrative role assignment is handled via separate, protected endpoints or internal processes, not exposed in public sign-up forms.
