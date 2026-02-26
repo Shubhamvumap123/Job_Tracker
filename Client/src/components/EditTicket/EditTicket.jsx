@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { X } from 'lucide-react';
+import React, { useState } from 'react'
+import { X, Loader2 } from 'lucide-react';
 
 const EditTicket = ({ ticket, onClose, onUpdate }) => {
     const [title, setTitle] = useState(ticket?.title || "");
@@ -7,17 +7,6 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
     const [priority, setPriority] = useState(ticket?.priority || "Low");
     const [status, setStatus] = useState(ticket?.status || "Open");
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // pre-fill form when ticket data is available
-    useEffect(() => {
-        if (ticket) {
-            setTitle(ticket.title);
-            setDescription(ticket.description);
-            setPriority(ticket.priority);
-            setStatus(ticket.status);
-        }
-    }, [ticket]);
-
     const [error, setError] = useState(null);
 
     // submit updated ticket data
@@ -54,7 +43,7 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
         <div className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Edit Ticket</h2>
-                <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+                <button onClick={onClose} aria-label="Close modal" className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
                     <X size={20} />
                 </button>
             </div>
@@ -66,8 +55,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                     </div>
                 )}
                 <div>
-                    <label className={labelClass}>Title</label>
+                    <label htmlFor="edit-title" className={labelClass}>Title</label>
                     <input
+                        id="edit-title"
                         type="text"
                         placeholder="e.g., Login page not loading"
                         value={title}
@@ -79,8 +69,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                 </div>
 
                 <div>
-                    <label className={labelClass}>Description</label>
+                    <label htmlFor="edit-description" className={labelClass}>Description</label>
                     <textarea
+                        id="edit-description"
                         rows={4}
                         placeholder="Describe the issue in detail..."
                         value={description}
@@ -93,8 +84,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className={labelClass}>Priority</label>
+                        <label htmlFor="edit-priority" className={labelClass}>Priority</label>
                         <select
+                            id="edit-priority"
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
                             disabled={status === 'Closed'}
@@ -107,8 +99,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                         </select>
                     </div>
                     <div>
-                        <label className={labelClass}>Status</label>
+                        <label htmlFor="edit-status" className={labelClass}>Status</label>
                         <select
+                            id="edit-status"
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
                             className={inputClass}
@@ -131,9 +124,9 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                 <button
                     onClick={handleUpdateTicket}
                     disabled={isSubmitting || !title || !description}
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center min-w-[120px] px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {isSubmitting ? 'Saving...' : 'Save Changes'}
+                    {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : 'Save Changes'}
                 </button>
             </div>
         </div>
