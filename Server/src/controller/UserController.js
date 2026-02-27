@@ -39,12 +39,13 @@ const registerUser = async (req, res) => {
         }
 
         // Create user
+        // SECURITY: Force role to 'customer' and department to 'General' to prevent privilege escalation
         const user = await User.create({
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
+            role: 'customer',
+            department: 'General',
             skills: skills || []
         });
 
