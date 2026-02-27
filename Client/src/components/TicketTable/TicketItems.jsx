@@ -25,11 +25,19 @@ export const TicketRow = ({ ticket, onEdit, onDelete }) => {
                 {new Date(ticket.createdAt).toLocaleDateString()}
             </td>
             <td className="px-6 py-4">
-                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => onEdit(ticket)} className="p-1.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                    <button
+                        onClick={() => onEdit(ticket)}
+                        aria-label="Edit ticket"
+                        className="p-1.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                    >
                         <Pencil size={16} />
                     </button>
-                    <button onClick={() => onDelete(ticket._id)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                    <button
+                        onClick={() => onDelete(ticket._id)}
+                        aria-label="Delete ticket"
+                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    >
                         <Trash2 size={16} />
                     </button>
                 </div>
@@ -47,10 +55,18 @@ export const TicketCard = ({ ticket, onEdit, onDelete }) => {
                     {ticket.title}
                 </h3>
                 <div className="flex gap-1">
-                    <button onClick={() => onEdit(ticket)} className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors">
+                    <button
+                        onClick={() => onEdit(ticket)}
+                        aria-label="Edit ticket"
+                        className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
+                    >
                         <Pencil size={15} />
                     </button>
-                    <button onClick={() => onDelete(ticket._id)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                    <button
+                        onClick={() => onDelete(ticket._id)}
+                        aria-label="Delete ticket"
+                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                    >
                         <Trash2 size={15} />
                     </button>
                 </div>
