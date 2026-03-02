@@ -1,0 +1,4 @@
+## 2026-03-02 - Hardcoded Secrets and Committed Environment Variables
+**Vulnerability:** The codebase contained hardcoded fallback credentials (`MONGO_URL` and `JWT_SECRET` as `"secret123"`) that were used if environment variables were missing. Additionally, a `.env` file containing actual MongoDB credentials was committed to version control.
+**Learning:** Providing hardcoded default secrets in configuration or controller files compromises security, as missing environment variables should fail securely (Fail-Safe Default) rather than defaulting to insecure known strings. Similarly, `.env` files must be explicitly untracked via `.gitignore` to prevent credential leaks.
+**Prevention:** Remove hardcoded fallback secrets. Ensure configuration modules and middlewares throw errors, return 500 status codes, or cleanly exit the process (`process.exit(1)`) if required security environment variables are absent. Maintain a strict `.gitignore` configuration.
