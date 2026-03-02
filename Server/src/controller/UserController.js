@@ -126,7 +126,8 @@ const getMe = async (req, res) => {
 const getAgents = async (req, res) => {
     try {
         const agents = await User.find({ role: { $in: ['agent', 'admin', 'manager'] } })
-            .select('-password');
+            .select('-password')
+            .lean({ virtuals: true }); // ⚡ Bolt: Using .lean() improves read performance when fetching multiple docs. Added virtuals: true to preserve string id fields.
         res.status(200).json(agents);
     } catch (error) {
         res.status(500).json({ message: error.message });
