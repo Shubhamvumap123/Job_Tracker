@@ -1,0 +1,4 @@
+## 2024-05-18 - Mass Assignment Privilege Escalation
+**Vulnerability:** The public user registration endpoint (`POST /api/users`) destructured `role`, `department`, and `skills` directly from the `req.body` and passed them to `User.create()`. This allowed any unauthenticated user to set their own role to 'admin', resulting in complete privilege escalation.
+**Learning:** In Mongoose/Express, using fallback operators like `role || 'customer'` does not protect against malicious payload values. The database simply accepts whatever is provided in the request body if it matches the schema.
+**Prevention:** Always hardcode sensitive fields during public resource creation and explicitly whitelist only safe fields from `req.body` to prevent Mass Assignment vulnerabilities. Do not rely on defaults when potentially malicious input is present.
