@@ -54,7 +54,7 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
         <div className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Edit Ticket</h2>
-                <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+                <button aria-label="Close" onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-full transition-colors">
                     <X size={20} />
                 </button>
             </div>

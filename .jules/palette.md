@@ -1,0 +1,3 @@
+## 2026-03-04 - [Fix Keyboard Accessibility on Hover Patterns]
+**Learning:** In the `TicketItems.jsx` component, the action buttons (Edit/Delete) were hidden by default using `opacity-0` and revealed on hover via `group-hover:opacity-100`. This completely broke keyboard navigation because tabbing into the hidden elements kept them invisible.
+**Action:** When hiding interactive elements using opacity for hover states, always include a focus-within rule on the container (e.g., `focus-within:opacity-100`) so the elements become visible when receiving keyboard focus. Additionally, provide explicit focus rings (e.g., `focus-visible:ring-2`) and aria labels for icon-only buttons to ensure a fully accessible experience.
