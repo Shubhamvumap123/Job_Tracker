@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken');
 
 // Generate JWT
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET || 'secret123', {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET environment variable is missing');
+    }
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '30d',
     });
 };
@@ -13,7 +16,7 @@ const generateToken = (id) => {
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role, department, skills } = req.body;
+        const { name, email, password } = req.body;
 
         // 1. Basic Validation
         if (!name || !email || !password) {
@@ -43,9 +46,9 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
-            skills: skills || []
+            role: 'customer', // Enforce customer role
+            department: 'General', // Enforce default department
+            skills: [] // Enforce empty skills
         });
 
         if (user) {
