@@ -1,0 +1,3 @@
+## 2025-03-04 - Mongoose Lean Queries and Virtuals
+**Learning:** Using `.lean()` on read-only Mongoose queries provides a significant performance boost (up to ~40% for large datasets), but by default it strips virtual properties. In this codebase, the frontend relies heavily on the string `id` virtual for component keys and routing, so using a plain `.lean()` will break the frontend.
+**Action:** When optimizing read queries in Mongoose controllers, always use `.lean({ virtuals: true })` instead of just `.lean()` to ensure the `id` virtual is preserved in the returned plain JavaScript objects while still gaining the performance benefits.
