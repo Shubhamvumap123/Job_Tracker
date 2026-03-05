@@ -1,0 +1,4 @@
+## 2025-02-17 - Hardcoded Fallback Credentials Vulnerability
+**Vulnerability:** Found hardcoded fallback credentials (`mongodb+srv://shubhamvumap_db_user:Password123@cluster0.xxktdey.mongodb.net/` in `Server/src/config/config.js` and `'secret123'` in JWT handling) used when environment variables are missing.
+**Learning:** Hardcoding fallback credentials or secrets provides a false sense of security and exposes the application if environment configurations fail to load. These fallback values can be easily extracted from the codebase, bypassing authentication and database security layers.
+**Prevention:** Always validate the presence of critical security environment variables (like `MONGO_URL` and `JWT_SECRET`) on startup or during use. If missing, fail securely by explicitly exiting the process or returning generic 500 errors to prevent defaulting to insecure, known values.
