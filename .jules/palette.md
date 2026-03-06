@@ -1,0 +1,3 @@
+## 2025-03-06 - Interactive elements hidden until hover require focus-within visibility
+**Learning:** In the TicketTable component, interactive action buttons (Edit, Delete) were wrapped in a container that was visually hidden (`opacity-0`) until hovered (`group-hover:opacity-100`). This made the buttons invisible and inaccessible to keyboard-only users who navigate via Tab. Icon-only buttons also lacked accessible names, making them unclear for screen reader users.
+**Action:** When using `opacity-0` to hide interactive elements until hovered, always pair it with `focus-within:opacity-100` (or `focus-visible`) on the container. Ensure all icon-only buttons include an `aria-label` attribute and clear `focus-visible:ring-2` styles for keyboard navigation.
