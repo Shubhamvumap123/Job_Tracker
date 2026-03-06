@@ -13,7 +13,9 @@ const generateToken = (id) => {
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role, department, skills } = req.body;
+        // SECURITY: Prevent Mass Assignment by explicitly only extracting expected fields.
+        // We ignore role, department, and skills to prevent privilege escalation on public registration.
+        const { name, email, password } = req.body;
 
         // 1. Basic Validation
         if (!name || !email || !password) {
@@ -39,13 +41,14 @@ const registerUser = async (req, res) => {
         }
 
         // Create user
+        // SECURITY: Explicitly hardcode default values for restricted fields
         const user = await User.create({
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
-            skills: skills || []
+            role: 'customer',
+            department: 'General',
+            skills: []
         });
 
         if (user) {

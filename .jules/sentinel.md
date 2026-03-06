@@ -1,0 +1,4 @@
+## 2025-03-06 - Privilege Escalation via Mass Assignment in User Registration
+**Vulnerability:** The public `POST /api/users` endpoint allowed unauthenticated users to register and specify their own `role`, `department`, and `skills` because these fields were destructured directly from `req.body` and passed to the `User.create()` function.
+**Learning:** Destructuring `req.body` and passing it directly to a database creation function without whitelisting allowed fields or hardcoding restricted fields creates a critical mass assignment vulnerability. This allowed users to easily elevate their privileges to `admin` or other restricted roles during initial registration.
+**Prevention:** Always hardcode default values for restricted fields (like `role`, `department`, `skills`) during user creation on public endpoints. Never trust or pass `req.body` values for sensitive fields directly to the database model. Use explicit assignments and input validation.
