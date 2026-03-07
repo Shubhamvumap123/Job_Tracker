@@ -125,8 +125,11 @@ const getMe = async (req, res) => {
 // @access  Private (Admin/Manager)
 const getAgents = async (req, res) => {
     try {
+        // ⚡ Bolt: Using .lean() avoids instantiating Mongoose documents for read-only
+        // list queries, significantly improving serialization speed and reducing memory usage.
         const agents = await User.find({ role: { $in: ['agent', 'admin', 'manager'] } })
-            .select('-password');
+            .select('-password')
+            .lean();
         res.status(200).json(agents);
     } catch (error) {
         res.status(500).json({ message: error.message });
