@@ -102,12 +102,24 @@ const updateTicket = async (req, res) => {
             return res.status(401).json({ message: 'User not authorized' });
         }
 
-        const { title, description, priority, status, assignedTo, department } = req.body;
+        // 🛡️ Sentinel: Prevent Mass Assignment Privilege Escalation
+        // Customers should not be able to change restricted fields
+        const updateData = {
+            title: req.body.title,
+            description: req.body.description,
+            priority: req.body.priority
+        };
+
+        if (req.user.role !== 'customer') {
+            if (req.body.status !== undefined) updateData.status = req.body.status;
+            if (req.body.assignedTo !== undefined) updateData.assignedTo = req.body.assignedTo;
+            if (req.body.department !== undefined) updateData.department = req.body.department;
+        }
 
         // Update fields
         const updatedTicket = await Ticket.findByIdAndUpdate(
             req.params.id,
-            { title, description, priority, status, assignedTo, department },
+            updateData,
             { new: true, runValidators: true }
         ).populate('assignedTo', 'name');
 
@@ -143,10 +155,11 @@ const deleteTicket = async (req, res) => {
         // Check if ticket.user exists to avoid crash on old data
         const isOwner = ticket.user && ticket.user.toString() === req.user.id;
         const isAdmin = req.user.role === 'admin';
-        // Allow deletion if ticket has no owner (orphan cleanup)
+        // 🛡️ Sentinel: Fix Broken Access Control (BAC)
+        // Orphan tickets (no owner) should ONLY be deletable by admins
         const isOrphan = !ticket.user;
 
-        if (!isAdmin && !isOwner && !isOrphan) {
+        if (!isAdmin && (!isOwner || isOrphan)) {
             return res.status(401).json({ message: 'Only Admins or Ticket Owners can delete tickets' });
         }
 
