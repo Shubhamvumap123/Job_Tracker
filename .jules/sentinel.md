@@ -1,0 +1,4 @@
+## 2025-02-17 - Privilege Escalation via Mass Assignment
+**Vulnerability:** A critical mass assignment vulnerability in `UserController.js` allowed any public user signing up to escalate their privileges to "admin" by sending `{"role": "admin"}` in their request body because `User.create` defaulted to reading the `role` from the destructured `req.body`.
+**Learning:** Hardcoding sensitive defaults in the controller for properties such as `role` is not enough if the field is also extracted from `req.body`. The controller must explicitly override fields with their secure values (e.g. `role: 'customer'`) and must not attempt to destructure secure fields from the incoming payload.
+**Prevention:** Never destructure sensitive fields like `role` from user inputs. Always explicitly hardcode default safety values during resource creation (e.g. `User.create({ ..., role: 'customer' })`), rather than passing untrusted input as the fallback.

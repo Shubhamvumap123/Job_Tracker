@@ -13,7 +13,10 @@ const generateToken = (id) => {
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role, department, skills } = req.body;
+        // Prevent Mass Assignment Vulnerability
+        // Only extract allowed fields to prevent privilege escalation via malicious request body
+        // DO NOT extract 'role' from req.body to prevent privilege escalation
+        const { name, email, password, department, skills } = req.body;
 
         // 1. Basic Validation
         if (!name || !email || !password) {
@@ -39,11 +42,12 @@ const registerUser = async (req, res) => {
         }
 
         // Create user
+        // Explicitly hardcode sensitive defaults rather than taking from req.body
         const user = await User.create({
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
+            role: 'customer', // Always default to customer to prevent privilege escalation
             department: department || 'General',
             skills: skills || []
         });
