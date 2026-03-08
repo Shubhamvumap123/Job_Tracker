@@ -1,0 +1,3 @@
+## 2024-05-14 - Mongoose Query Optimization with .lean()
+**Learning:** Using `.lean()` on read-only Mongoose queries drastically improves read performance (up to ~40% faster on large datasets) by returning plain JavaScript objects instead of instantiating heavy Mongoose document instances. This avoids the memory and CPU overhead associated with Mongoose's internal tracking, change detection, getters/setters, and virtuals. Using `.lean({ virtuals: true })` does not work natively without the `mongoose-lean-virtuals` plugin.
+**Action:** Always append `.lean()` to Mongoose queries when the retrieved documents are strictly read-only and will not be modified or saved back to the database. Be cautious of virtual properties that may be lost without specific plugins.
