@@ -1,0 +1,3 @@
+## 2025-03-08 - Added ARIA labels and focus states to action buttons
+**Learning:** Icon-only buttons revealed via hover states (e.g. `opacity-0 group-hover:opacity-100`) often hide functionality from keyboard-only users because they remain invisible on focus without `focus-within` or similar focus-based utility classes. Furthermore, icon-only buttons need `aria-label`s to communicate their purpose to screen readers.
+**Action:** When creating hover-revealed interactive elements, always include `focus-within:opacity-100` on the container or `focus-visible:opacity-100` directly on the elements. Ensure all icon-only buttons have an `aria-label` attribute and clear focus indicators like `focus-visible:ring-2`.
