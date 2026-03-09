@@ -125,8 +125,11 @@ const getMe = async (req, res) => {
 // @access  Private (Admin/Manager)
 const getAgents = async (req, res) => {
     try {
+        // ⚡ Bolt: Using .lean() to bypass document hydration and return plain JS objects,
+        // reducing memory overhead and improving read response time.
         const agents = await User.find({ role: { $in: ['agent', 'admin', 'manager'] } })
-            .select('-password');
+            .select('-password')
+            .lean();
         res.status(200).json(agents);
     } catch (error) {
         res.status(500).json({ message: error.message });
