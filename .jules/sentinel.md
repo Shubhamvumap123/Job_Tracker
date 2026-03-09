@@ -1,0 +1,4 @@
+## 2024-03-09 - Remove Hardcoded Database Credentials
+**Vulnerability:** A hardcoded MongoDB connection string (including username and password) was present in `Server/src/config/config.js` as a fallback for the `MONGO_URL` environment variable.
+**Learning:** Hardcoded credentials in source code are a critical vulnerability that can lead to database compromise if the codebase is exposed. Furthermore, falling back to a hardcoded database URI when an environment variable is missing violates the principle of failing securely.
+**Prevention:** Always rely strictly on environment variables or secure vault services for sensitive credentials. If a required credential environment variable is missing, the application should log an error and exit securely (`process.exit(1)`) rather than using an insecure fallback.
