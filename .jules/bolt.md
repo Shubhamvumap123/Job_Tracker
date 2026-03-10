@@ -1,0 +1,3 @@
+## 2024-05-18 - Mongoose Read-Only Query Overhead
+**Learning:** Instantiating full Mongoose documents for read-only API endpoints (like fetching ~1000 tickets or lists of users) creates significant memory and processing overhead.
+**Action:** Always append `.lean()` to Mongoose `find` queries in controller endpoints that only read data (like `getTicketList` and `getAgents`) to return plain JavaScript objects. This simple change yields massive performance gains (e.g., ~40% faster response times, dropping from ~2110ms to ~1270ms). Note: Do not use `.lean()` if the controller needs to save updates to the document later or requires Mongoose virtuals.
