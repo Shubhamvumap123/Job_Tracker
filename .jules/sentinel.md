@@ -1,0 +1,4 @@
+## 2024-05-24 - Fix Mass Assignment in User Registration
+**Vulnerability:** Privilege Escalation via Mass Assignment in `UserController.js`. The public registration endpoint (`POST /api/users`) blindly extracted `role`, `department`, and `skills` from `req.body` and passed them to `User.create()`. This allowed any unauthenticated user to create an account with `admin` privileges simply by providing `"role": "admin"` in the request payload.
+**Learning:** Destructuring sensitive fields directly from user input without validation or hardcoded defaults in resource creation logic leads to severe privilege escalation risks.
+**Prevention:** Always hardcode sensitive fields (e.g., `role`, `department`, permissions) to secure defaults (e.g., `'customer'`) during public resource creation. Never trust `req.body` to provide safe defaults for authorization-related fields. Implement explicit validation or a separate, authenticated endpoint for creating privileged accounts.
