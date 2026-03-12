@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Action Reveal
+**Learning:** Hiding icon actions using `opacity-0` with `group-hover:opacity-100` makes them inaccessible to keyboard users because tabbing into them does not reveal them visually. Additionally, icon-only buttons lack context without explicit labeling.
+**Action:** Always pair `opacity-0 group-hover:opacity-100` on parent containers with `focus-within:opacity-100` to ensure keyboard navigation visibility. Provide explicit `aria-label` attributes to all icon-only buttons and implement `focus-visible:ring-2` with `focus-visible:outline-none` for clear keyboard focus indicators.
