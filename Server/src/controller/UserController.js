@@ -125,8 +125,10 @@ const getMe = async (req, res) => {
 // @access  Private (Admin/Manager)
 const getAgents = async (req, res) => {
     try {
+        // ⚡ Bolt: Added .lean() to return plain objects and avoid Mongoose document hydration overhead.
         const agents = await User.find({ role: { $in: ['agent', 'admin', 'manager'] } })
-            .select('-password');
+            .select('-password')
+            .lean();
         res.status(200).json(agents);
     } catch (error) {
         res.status(500).json({ message: error.message });
