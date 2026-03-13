@@ -1,0 +1,4 @@
+## 2024-05-24 - Mass Assignment in User Registration
+**Vulnerability:** The `POST /api/users` public registration endpoint accepted `role`, `department`, and `skills` directly from `req.body` using lazy evaluation (e.g., `role: role || 'customer'`). This allowed any user to escalate their privileges to 'admin' or 'agent' during registration.
+**Learning:** Default parameter fallback using `||` in object creation does not protect against malicious inputs if the fields are present in the request body. Input data from public endpoints should never be blindly trusted or passed into model creation.
+**Prevention:** Hardcode sensitive fields to safe defaults (e.g., `'customer'`, `'General'`, `[]`) during resource creation on public endpoints. Explicitly extract and validate only the permitted fields from `req.body`.

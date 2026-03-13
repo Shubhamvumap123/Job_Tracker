@@ -39,13 +39,14 @@ const registerUser = async (req, res) => {
         }
 
         // Create user
+        // SECURITY: Prevent Mass Assignment by hardcoding default values for public registration
         const user = await User.create({
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
-            skills: skills || []
+            role: 'customer',
+            department: 'General',
+            skills: []
         });
 
         if (user) {
