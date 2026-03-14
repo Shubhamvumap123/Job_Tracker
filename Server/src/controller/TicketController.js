@@ -55,12 +55,13 @@ const getTicketList = async (req, res) => {
         const { status, priority, search, department, assignedTo } = req.query;
         const filter = {};
 
-        if (status) filter.status = status;
-        if (priority) filter.priority = priority;
-        if (department) filter.department = department;
-        if (assignedTo) filter.assignedTo = assignedTo;
+        // Prevent NoSQL Injection: strictly enforce string types
+        if (status && typeof status === 'string') filter.status = status;
+        if (priority && typeof priority === 'string') filter.priority = priority;
+        if (department && typeof department === 'string') filter.department = department;
+        if (assignedTo && typeof assignedTo === 'string') filter.assignedTo = assignedTo;
 
-        if (search) {
+        if (search && typeof search === 'string') {
             filter.$or = [
                 { title: { $regex: search, $options: 'i' } },
                 { description: { $regex: search, $options: 'i' } }
@@ -104,10 +105,22 @@ const updateTicket = async (req, res) => {
 
         const { title, description, priority, status, assignedTo, department } = req.body;
 
+        // Prevent Mass Assignment: explicitly build update object based on role
+        const updateData = {};
+        if (title !== undefined) updateData.title = title;
+        if (description !== undefined) updateData.description = description;
+        if (priority !== undefined) updateData.priority = priority;
+
+        if (req.user.role !== 'customer') {
+            if (status !== undefined) updateData.status = status;
+            if (assignedTo !== undefined) updateData.assignedTo = assignedTo;
+            if (department !== undefined) updateData.department = department;
+        }
+
         // Update fields
         const updatedTicket = await Ticket.findByIdAndUpdate(
             req.params.id,
-            { title, description, priority, status, assignedTo, department },
+            updateData,
             { new: true, runValidators: true }
         ).populate('assignedTo', 'name');
 
@@ -143,10 +156,9 @@ const deleteTicket = async (req, res) => {
         // Check if ticket.user exists to avoid crash on old data
         const isOwner = ticket.user && ticket.user.toString() === req.user.id;
         const isAdmin = req.user.role === 'admin';
-        // Allow deletion if ticket has no owner (orphan cleanup)
-        const isOrphan = !ticket.user;
 
-        if (!isAdmin && !isOwner && !isOrphan) {
+        // Prevent Authorization Bypass: orphan cleanup is strictly restricted to Admins
+        if (!isAdmin && !isOwner) {
             return res.status(401).json({ message: 'Only Admins or Ticket Owners can delete tickets' });
         }
 

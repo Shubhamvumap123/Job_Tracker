@@ -1,0 +1,4 @@
+## 2024-03-14 - Mass Assignment & Auth Bypass in TicketController
+**Vulnerability:** Found mass assignment in ticket updates (customers could modify `status`, `department`, etc.), authorization bypass in ticket deletion (anyone could delete orphan tickets), and NoSQL injection risk via raw object assignment in query filters.
+**Learning:** `req.body` directly mapped to MongoDB updates and `!ticket.user` bypassed deletion checks. Direct assignment of `req.query` without type validation risks query injection.
+**Prevention:** Explicitly destruct and whitelist fields based on `req.user.role`. Restrict orphan cleanups strictly to `admin` roles. Validate `typeof x === 'string'` for user inputs directly used in Mongo queries.
