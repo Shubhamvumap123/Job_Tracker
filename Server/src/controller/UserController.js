@@ -43,9 +43,11 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
-            skills: skills || []
+            // 🛡️ Sentinel: Prevent mass assignment by ignoring client-provided role/dept/skills
+            // Public registration must ALWAYS be a customer. Admins are created internally.
+            role: 'customer',
+            department: 'General',
+            skills: []
         });
 
         if (user) {
