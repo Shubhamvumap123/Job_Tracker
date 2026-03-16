@@ -1,0 +1,3 @@
+## 2024-03-16 - Ensure Focus States for Visually Hidden Interactive Elements
+**Learning:** Interactive elements like action buttons (Edit, Delete) in table rows or cards that are hidden visually using `opacity-0` and only shown on hover (`group-hover:opacity-100`) become inaccessible for keyboard navigation since their focus state remains hidden.
+**Action:** Always add `focus-within:opacity-100` to the container of such elements to ensure they become visible when any element inside them receives keyboard focus via the Tab key. Ensure they also have `focus-visible:ring-2` to clearly highlight the currently focused button.
