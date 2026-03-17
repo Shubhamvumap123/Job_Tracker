@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessibility of visually hidden elements and icon buttons
+**Learning:** Interactive elements that are visually hidden until hovered (using `opacity-0`) must include `focus-within:opacity-100` (or `focus-visible`) to ensure they become visible when a keyboard user navigates to them. Additionally, icon-only buttons require explicit `aria-label` attributes and clear focus rings (`focus-visible:ring-2`) to be accessible to screen reader and keyboard users.
+**Action:** Always verify keyboard navigation for elements that depend on hover states and ensure all icon-only buttons have descriptive ARIA labels and clear focus indicators.
