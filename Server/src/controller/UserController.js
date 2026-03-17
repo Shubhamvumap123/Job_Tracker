@@ -113,7 +113,10 @@ const loginUser = async (req, res) => {
 // @access  Private
 const getMe = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
+        // Performance optimization: Use .lean() to bypass Mongoose document instantiation for read-only query
+        // IMPORTANT: Because .lean() returns a raw JS object, schema transforms (like removing passwords) are bypassed.
+        // We must explicitly use .select('-password') to avoid leaking credentials.
+        const user = await User.findById(req.user.id).select('-password').lean();
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -125,8 +128,10 @@ const getMe = async (req, res) => {
 // @access  Private (Admin/Manager)
 const getAgents = async (req, res) => {
     try {
+        // Performance optimization: Use .lean() to bypass Mongoose document instantiation for read-only query
         const agents = await User.find({ role: { $in: ['agent', 'admin', 'manager'] } })
-            .select('-password');
+            .select('-password')
+            .lean();
         res.status(200).json(agents);
     } catch (error) {
         res.status(500).json({ message: error.message });
