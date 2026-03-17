@@ -1,0 +1,4 @@
+## 2025-03-17 - Mass Assignment in User Registration
+**Vulnerability:** The public `POST /api/users` endpoint allowed users to pass `role`, `department`, and `skills` in the request body, which were then mapped to the `User.create()` call (`role: role || 'customer'`). This is a severe Mass Assignment vulnerability allowing any new user to grant themselves `admin` privileges simply by sending `{"role": "admin"}` in their registration request.
+**Learning:** Default fallbacks in model creation logic (e.g. `role: role || 'customer'`) are not a security mechanism. Because the destructured `req.body` directly mapped these sensitive attributes without an explicit whitelist or ignore list, privilege escalation was possible.
+**Prevention:** Hardcode sensible defaults for sensitive fields (e.g. `role: 'customer'`, `department: 'General'`, `skills: []`) in the controller creation logic for public endpoints, overriding any user input. Never trust `req.body` blindly.

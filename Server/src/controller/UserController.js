@@ -13,7 +13,7 @@ const generateToken = (id) => {
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role, department, skills } = req.body;
+        const { name, email, password } = req.body;
 
         // 1. Basic Validation
         if (!name || !email || !password) {
@@ -43,9 +43,10 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: role || 'customer', // Default to customer
-            department: department || 'General',
-            skills: skills || []
+            // SECURITY FIX: Hardcode role, department, and skills to prevent mass assignment (privilege escalation)
+            role: 'customer',
+            department: 'General',
+            skills: []
         });
 
         if (user) {
