@@ -1,0 +1,3 @@
+## 2025-03-18 - [Accessibility] Fix Icon-only Button Keyboard Navigation
+**Learning:** For interactive icon-only elements contained in a row/card that are visually hidden via `opacity-0` until hovered, you must also use `focus-within:opacity-100` on the container so they become visible during keyboard navigation. In addition, they must always include explicit `aria-label` attributes and clear `focus-visible` ring indicators.
+**Action:** Ensure that any element using hover-based opacity for visibility also includes focus-within rules for accessibility. Always add `aria-label`s to icon-only buttons.
