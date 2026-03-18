@@ -1,0 +1,4 @@
+## 2024-05-24 - Mass Assignment Vulnerability in User Registration
+**Vulnerability:** The public `POST /api/users` endpoint allowed users to specify their `role`, `department`, and `skills` in the request body during registration.
+**Learning:** This is a classic Mass Assignment vulnerability. It existed because the backend implicitly trusted `req.body` to define user properties, relying only on defaults (`role: role || 'customer'`) rather than strictly filtering or hardcoding values. This allowed any public user to elevate their privileges by sending `{"role": "admin"}`.
+**Prevention:** Always hardcode or strictly whitelist (e.g., using a schema validation library or explicitly mapping fields) sensitive fields like `role`, `permissions`, `isAdmin`, etc., during resource creation or update. Do not pass `req.body` directly or rely on truthy checks that can be overridden by user input.
