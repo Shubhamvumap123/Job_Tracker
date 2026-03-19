@@ -39,15 +39,17 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
             {/* View Toggle Buttons - Added 'sm:ml-auto' here */}
             <div className="bg-gray-100 p-1 rounded-lg flex gap-1 border border-gray-200 w-full sm:w-auto justify-end sm:ml-auto">
                 <button
+                    aria-label="List View"
                     onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`p-2 rounded-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${viewMode === 'list' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
                     title="List View"
                 >
                     <LayoutList size={18} />
                 </button>
                 <button
+                    aria-label="Grid View"
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`p-2 rounded-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${viewMode === 'grid' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
                     title="Grid View"
                 >
                     <LayoutGrid size={18} />

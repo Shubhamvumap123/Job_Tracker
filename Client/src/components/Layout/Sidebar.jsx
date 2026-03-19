@@ -33,7 +33,7 @@ const Sidebar = ({ onCreateClick, isOpen, onClose }) => {
                             <Ticket size={28} strokeWidth={2.5} />
                             <span className="text-xl font-bold tracking-tight text-white">SupportDesk</span>
                         </div>
-                        <button onClick={onClose} className="md:hidden text-slate-400 hover:text-white transition-colors">
+                        <button aria-label="Close menu" onClick={onClose} className="md:hidden text-slate-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors">
                             <X size={24} />
                         </button>
                     </div>
