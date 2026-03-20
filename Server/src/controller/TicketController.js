@@ -148,10 +148,8 @@ const deleteTicket = async (req, res) => {
         // Check if ticket.user exists to avoid crash on old data
         const isOwner = ticket.user && ticket.user.toString() === req.user.id;
         const isAdmin = req.user.role === 'admin';
-        // Allow deletion if ticket has no owner (orphan cleanup)
-        const isOrphan = !ticket.user;
 
-        if (!isAdmin && !isOwner && !isOrphan) {
+        if (!isAdmin && !isOwner) {
             return res.status(401).json({ message: 'Only Admins or Ticket Owners can delete tickets' });
         }
 
