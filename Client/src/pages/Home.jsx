@@ -1,29 +1,35 @@
 import { Ticket, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTicketContext } from '../context/TicketContext';
-import { useSocket } from '../context/SocketContext';
-import { useEffect } from 'react';
+import { useMemo } from 'react';
 
 const Home = () => {
     const navigate = useNavigate();
-    const { tickets, fetchTickets } = useTicketContext(); // We should use fetchTickets to refresh
-    const socket = useSocket();
+    const { tickets } = useTicketContext();
 
     // Real-time updates are now handled globally in TicketContext
 
+    // ⚡ Bolt: Optimize stats calculation from O(3n) to O(n) and memoize to prevent
+    // re-calculating on every render, especially during frequent Socket.IO broadcasts
+    const stats = useMemo(() => {
+        let openCount = 0;
+        let inProgressCount = 0;
+        let resolvedCount = 0;
 
-    // calculate quick statistics for the dashboard
-    const totalTickets = tickets.length;
-    const openTickets = tickets.filter(t => t.status === 'Open' || t.status === 'New').length;
-    const inProgressTickets = tickets.filter(t => t.status === 'In Progress').length;
-    const resolvedTickets = tickets.filter(t => ['Closed', 'Resolved'].includes(t.status)).length;
+        for (let i = 0; i < tickets.length; i++) {
+            const status = tickets[i].status;
+            if (status === 'Open' || status === 'New') openCount++;
+            else if (status === 'In Progress') inProgressCount++;
+            else if (status === 'Closed' || status === 'Resolved') resolvedCount++;
+        }
 
-    const stats = [
-        { label: 'Total Tickets', value: totalTickets, icon: Ticket, color: 'bg-blue-500' },
-        { label: 'Active', value: openTickets, icon: AlertCircle, color: 'bg-yellow-500' },
-        { label: 'In Progress', value: inProgressTickets, icon: Clock, color: 'bg-indigo-500' },
-        { label: 'Closed', value: resolvedTickets, icon: CheckCircle, color: 'bg-green-500' },
-    ];
+        return [
+            { label: 'Total Tickets', value: tickets.length, icon: Ticket, color: 'bg-blue-500' },
+            { label: 'Active', value: openCount, icon: AlertCircle, color: 'bg-yellow-500' },
+            { label: 'In Progress', value: inProgressCount, icon: Clock, color: 'bg-indigo-500' },
+            { label: 'Closed', value: resolvedCount, icon: CheckCircle, color: 'bg-green-500' },
+        ];
+    }, [tickets]);
 
     return (
         <div className="space-y-8">
