@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTicketContext } from '../../context/TicketContext';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 
 const CreateTicket = ({ onClose }) => {
     const { createTicket } = useTicketContext();
@@ -111,9 +111,16 @@ const CreateTicket = ({ onClose }) => {
                 <button
                     onClick={handleCreateTicket}
                     disabled={isSubmitting || !title || !description}
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center min-w-[120px] px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {isSubmitting ? 'Creating...' : 'Create Ticket'}
+                    {isSubmitting ? (
+                        <>
+                            <Loader2 size={16} className="animate-spin mr-2" />
+                            Creating...
+                        </>
+                    ) : (
+                        'Create Ticket'
+                    )}
                 </button>
             </div>
         </div>
