@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 
 const EditTicket = ({ ticket, onClose, onUpdate }) => {
     const [title, setTitle] = useState(ticket?.title || "");
@@ -11,6 +11,7 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
     // pre-fill form when ticket data is available
     useEffect(() => {
         if (ticket) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTitle(ticket.title);
             setDescription(ticket.description);
             setPriority(ticket.priority);
@@ -131,9 +132,16 @@ const EditTicket = ({ ticket, onClose, onUpdate }) => {
                 <button
                     onClick={handleUpdateTicket}
                     disabled={isSubmitting || !title || !description}
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center min-w-[120px] px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {isSubmitting ? 'Saving...' : 'Save Changes'}
+                    {isSubmitting ? (
+                        <>
+                            <Loader2 size={16} className="animate-spin mr-2" />
+                            Saving...
+                        </>
+                    ) : (
+                        'Save Changes'
+                    )}
                 </button>
             </div>
         </div>
