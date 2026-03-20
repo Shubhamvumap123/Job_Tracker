@@ -55,15 +55,18 @@ const getTicketList = async (req, res) => {
         const { status, priority, search, department, assignedTo } = req.query;
         const filter = {};
 
-        if (status) filter.status = status;
-        if (priority) filter.priority = priority;
-        if (department) filter.department = department;
-        if (assignedTo) filter.assignedTo = assignedTo;
+        // 🛡️ Sentinel: Enforce string type to prevent NoSQL injection via object payloads (e.g. {"$ne": "closed"})
+        if (status && typeof status === 'string') filter.status = status;
+        if (priority && typeof priority === 'string') filter.priority = priority;
+        if (department && typeof department === 'string') filter.department = department;
+        if (assignedTo && typeof assignedTo === 'string') filter.assignedTo = assignedTo;
 
-        if (search) {
+        if (search && typeof search === 'string') {
+            // 🛡️ Sentinel: Escape search parameter to prevent Regex injection and ReDoS vulnerabilities
+            const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             filter.$or = [
-                { title: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } }
+                { title: { $regex: escapedSearch, $options: 'i' } },
+                { description: { $regex: escapedSearch, $options: 'i' } }
             ];
         }
 
