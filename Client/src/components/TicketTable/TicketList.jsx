@@ -2,7 +2,7 @@ import React from 'react';
 import { TicketRow, TicketCard } from './TicketItems';
 import { FileQuestion } from 'lucide-react';
 
-const TicketList = ({ viewMode, tickets, onEdit, onDelete }) => {
+const TicketList = React.memo(({ viewMode, tickets, onEdit, onDelete }) => {
 
     return (
         <div className="flex flex-col h-full w-full">
@@ -56,6 +56,6 @@ const TicketList = ({ viewMode, tickets, onEdit, onDelete }) => {
             </div>
         </div>
     );
-};
+});
 
 export default TicketList;

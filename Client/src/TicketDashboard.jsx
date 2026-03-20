@@ -3,7 +3,7 @@ import { useTicketContext } from './context/TicketContext';
 import FilterBar from './components/Filters/FilterBar';
 import TicketList from './components/TicketTable/TicketList';
 import { Loader2, AlertCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Configuration constants
 const OPTIONS = {
@@ -23,6 +23,15 @@ const TicketDashboard = () => {
     useEffect(() => {
         localStorage.setItem('ticketViewMode', viewMode);
     }, [viewMode]);
+
+    // memoized handlers for TicketList
+    const handleEdit = useCallback((ticket) => {
+        setEditingTicket(ticket);
+    }, []);
+
+    const handleDelete = useCallback((id) => {
+        removeTicket(id);
+    }, [removeTicket]);
 
     // wrapper to handle ticket updates and close modal on success
     const handleUpdate = async (id, data) => {
@@ -61,8 +70,8 @@ const TicketDashboard = () => {
                         <TicketList
                             viewMode={viewMode}
                             tickets={tickets}
-                            onEdit={(ticket) => setEditingTicket(ticket)}
-                            onDelete={(id) => removeTicket(id)}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
                         />
                     </div>
 
