@@ -16,7 +16,7 @@ const Layout = ({ onCreateClick }) => {
             <main className="flex-1 overflow-x-hidden w-full">
                 <div className="md:hidden bg-white border-b border-gray-200 p-4 flex items-center justify-between sticky top-0 z-20">
                     <div className="flex items-center gap-2">
-                        <button onClick={() => setIsSidebarOpen(true)} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                        <button aria-label="Open menu" onClick={() => setIsSidebarOpen(true)} className="p-2 text-gray-600 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg">
                             <Menu size={24} />
                         </button>
                         <span className="text-lg font-bold text-gray-900">SupportDesk</span>
