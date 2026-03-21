@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
@@ -16,7 +16,7 @@ const Register = () => {
     const [successMsg, setSuccessMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const { register, user } = useAuth();
+    const { register } = useAuth();
     const navigate = useNavigate();
 
     // Clear error when user types
@@ -78,7 +78,7 @@ const Register = () => {
                         Create an Account
                     </h2>
                     <p className="mt-2 text-sm text-gray-600">
-                        Join SmartPost Enterprise today
+                        Join Job Tracker today
                     </p>
                 </div>
 

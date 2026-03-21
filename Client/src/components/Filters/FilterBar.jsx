@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, LayoutList, LayoutGrid } from 'lucide-react';
 
-const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) => {
+const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange }) => {
     return (
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6 p-4 bg-white rounded-lg border border-gray-100 shadow-sm">
 
@@ -11,7 +11,7 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
                 </div>
                 <input
                     type="text"
-                    placeholder="Search tickets..."
+                    placeholder="Search jobs..."
                     value={filters.search || ''}
                     onChange={(e) => onFilterChange('search', e.target.value)}
                     className="w-full sm:w-64 pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
@@ -19,21 +19,15 @@ const FilterBar = ({ setViewMode, viewMode, filters, onFilterChange, options }) 
             </div>
 
             <select
-                value={filters.priority}
-                onChange={(e) => onFilterChange('priority', e.target.value)}
-                className="w-full sm:w-auto px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            >
-                <option value="">All Priorities</option>
-                {options.priorities.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-            </select>
-
-            <select
                 value={filters.status}
                 onChange={(e) => onFilterChange('status', e.target.value)}
                 className="w-full sm:w-auto px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
             >
                 <option value="">All Statuses</option>
-                {options.statuses.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                <option value="Applied">Applied</option>
+                <option value="Interview">Interview</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
             </select>
 
             {/* View Toggle Buttons - Added 'sm:ml-auto' here */}

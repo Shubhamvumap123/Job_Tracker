@@ -1,42 +1,34 @@
-# Support Ticket Management System
+# Job Tracker Application
 
-A robust, full-stack MERN application designed for creating, managing, and tracking support tickets. This project demonstrates a clean architecture, responsive UI, and solid backend validation.
+A robust, full-stack MERN application designed for creating, managing, and tracking job applications. This project is a production-ready SaaS dashboard that helps you organize your job search.
 
 ## Features
 
 ### Core Functionality
-- **Create Tickets**: Users can submit new tickets with a Title, Description, Priority (High/Medium/Low), and Status.
-- **Dashboard**: A centralized view of all tickets, featuring:
-  - **Dynamic Statistics**: Real-time counters for Total, Open, In Progress, and Resolved tickets.
-  - **Status Indicators**: Color-coded badges for quick visual recognition of priority and status.
+- **User Authentication**: Secure signup, login, and logout using JWT.
+- **Manage Applications**: Users can submit new job applications with Company, Position, Location, Salary, Notes, and Status tracking.
+- **Job Status Tracking**: Categorize applications into *Applied*, *Interview*, *Offer*, and *Rejected*.
+- **Dashboard**: A centralized view of all applications, featuring:
+  - **Dynamic Analytics**: Real-time stats for Total Applications, Applied, Interviewing, and Offers.
+  - **Status Indicators**: Color-coded badges for quick visual recognition of application status.
 - **Search & Filter**:
-  - **Search**: Real-time filtering by ticket title (debounced for performance).
-  - **Filter**: Dropdowns to filter by Status and Priority.
-- **Edit Ticket**: A modal interface to update ticket details without leaving the dashboard.
-- **Delete Ticket**: Permanently remove tickets from the system.
+  - **Search**: Real-time filtering by company, position, or location.
+  - **Filter**: Dropdowns to filter by application Status.
+- **Edit & Delete**: A modal interface to update job application details and a fast way to remove rejected or stale jobs.
 
 ### UX/UI
-- **Responsive Design**: Fully responsive layout that adapts to mobile, tablet, and desktop screens.
-  - **Collapsible Sidebar**: Navigation drawer for smaller screens.
-  - **Scrollable Table**: Fixed header with scrollable body for large datasets.
+- **Responsive Design**: Fully responsive layout that adapts to mobile, tablet, and desktop screens with a collapsible sidebar.
+- **Modern Dashboard UI**: Professional SaaS layout built with TailwindCSS and Lucide React icons.
 - **Feedback & Validation**:
-  - **Frontend**: Immediate visual feedback for actions (loading states, success updates).
-  - **Backend Errors**: Clear, user-friendly error messages displayed directly in the UI if validation fails.
-
-### Technical Highlights
-- **Validation**:
-  - **Rules**: Title and Description must be at least 2 characters and contain at least one letter (pure numbers are rejected).
-  - **Error Handling**: The backend catches invalid data and returns specific 400 Bad Request messages, which the frontend displays.
-- **Architecture**:
-  - **Frontend**: Component-based React architecture using Hooks (`useTickets`, `useDebounce`).
-  - **Backend**: MVC pattern (Model, View/Route, Controller) with Mongoose for data modeling.
+  - **Frontend**: Immediate visual feedback, loaders, and toast notifications.
+  - **Backend Errors**: Clear, user-friendly error messages if validation fails.
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend (Client)
-- **Framework**: React.js (Vite)
+- **Framework**: React.js / Vite
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 - **HTTP Client**: Axios
@@ -45,35 +37,9 @@ A robust, full-stack MERN application designed for creating, managing, and track
 ### Backend (Server)
 - **Runtime**: Node.js
 - **Framework**: Express.js
-- **Database**: MongoDB (Mongoose ODM)
-- **Utilities**: CORS, Dotenv, Nodemon
-
----
-
-## 📂 Project Structure
-
-```
-Ticket_Support/
-├── Client/                 # Frontend React Application
-│   ├── src/
-│   │   ├── API/           # API service configuration
-│   │   ├── components/    # Reusable UI components (CreateTicket, TicketRow, etc.)
-│   │   ├── hooks/         # Custom hooks (useTickets, useDebounce)
-│   │   ├── pages/         # Page components (Home, Tickets)
-│   │   └── Main.jsx       # Entry point
-│   ├── index.css          # Global styles & Tailwind imports
-│   └── package.json       # Frontend dependencies
-│
-├── Server/                 # Backend Node.js Application
-│   ├── src/
-│   │   ├── config/        # Database connection logic
-│   │   ├── controller/    # Request handlers (TicketController)
-│   │   ├── model/         # Mongoose schemas (Ticket.Model)
-│   │   ├── routes/        # API route definitions (TicketRoutes)
-│   │   └── server.js      # Server entry point
-│   └── package.json       # Backend dependencies
-└── README.md              # Project documentation
-```
+- **Database**: MongoDB (Mongoose)
+- **Authentication**: JSON Web Tokens (JWT)
+- **Utilities**: CORS, Dotenv, Bcryptjs
 
 ---
 
@@ -82,6 +48,7 @@ Ticket_Support/
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v14 or higher)
 - [MongoDB](https://www.mongodb.com/) (Local instance or Atlas URL)
+- [pnpm](https://pnpm.io/) package manager
 
 ### 1. Backend Setup
 
@@ -91,16 +58,17 @@ Ticket_Support/
     ```
 2.  Install dependencies:
     ```bash
-    npm install
+    pnpm install
     ```
-3.  **Configuration**: Ensure a `.env` file exists in `Server/` with the following content (or modify `src/config/config.js` directly if not using dotenv):
+3.  **Configuration**: Ensure a `.env` file exists in `Server/` with the following content:
     ```env
     PORT=5000
-    MONGO_URI=mongodb+srv://shubhamvumap_db_user:Password123@cluster0.xxktdey.mongodb.net/
+    MONGO_URI=your_mongodb_connection_string
+    JWT_SECRET=your_jwt_secret
     ```
 4.  Start the server:
     ```bash
-    npm run start
+    pnpm start
     ```
     The server will run at `http://localhost:5000`.
 
@@ -112,76 +80,42 @@ Ticket_Support/
     ```
 2.  Install dependencies:
     ```bash
-    npm install
+    pnpm install
     ```
 3.  Start the development server:
     ```bash
-    npm run dev
+    pnpm run dev
     ```
     The application will launch at `http://localhost:5173`.
 
 ---
 
-## 📡 API Documentation
+## 🚀 Deployment (Vercel + Render)
 
-Base URL: `http://localhost:5000/api/tickets`
+### Backend (Render)
+1. Push your code to GitHub.
+2. Go to [Render](https://render.com/), create a new "Web Service".
+3. Connect your GitHub repository.
+4. Set the Build Command to `pnpm install` and the Start Command to `pnpm start`.
+5. Add your Environment Variables (`MONGO_URI`, `JWT_SECRET`, etc.).
+6. Deploy! Copy the generated API URL.
 
-| Method | Endpoint       | Description                                      | Query Params               |
-| :----- | :------------- | :----------------------------------------------- | :------------------------- |
-| POST   | `/create`      | Create a new ticket                              | -                          |
-| GET    | `/list`        | Retrieve all tickets (with filtering/search)     | `status`, `priority`, `search` |
-| PUT    | `/update/:id`  | Update an existing ticket by ID                  | -                          |
-| DELETE | `/delete/:id`  | Delete a ticket by ID                            | -                          |
-
-### Sample Ticket Object
-```json
-{
-  "_id": "64f8a...",
-  "title": "Login Page Error",
-  "description": "User cannot login with valid credentials.",
-  "priority": "High",
-  "status": "Open",
-  "createdAt": "2023-09-06T10:00:00.000Z"
-}
-```
+### Frontend (Vercel)
+1. Go to [Vercel](https://vercel.com/) and create a new project.
+2. Connect your GitHub repository.
+3. Set the Framework Preset to Vite.
+4. Ensure the Build Command is `pnpm run build`.
+5. In your frontend API service files (e.g. `jobService.js`), replace `localhost` with your new Render backend API URL.
+6. Deploy!
 
 ---
 
-## ✅ Validation Rules
+## 📸 Screenshots
 
-To ensure data quality, the following validation rules are enforced on the backend:
+*(Add screenshots of your application here)*
 
-1.  **Title**:
-    - Required.
-    - Min length: 2 characters.
-    - Max length: 100 characters.
-    - **Must contain at least one letter** (cannot be purely numeric).
-2.  **Description**:
-    - Required.
-    - Min length: 2 characters.
-    - **Must contain at least one letter**.
-3.  **Priority**:
-    - Must be one of: `Low`, `Medium`, `High`.
-4.  **Status**:
-    - Must be one of: `Open`, `In Progress`, `Closed`.
+![Dashboard Screenshot](https://via.placeholder.com/800x450?text=Dashboard+Screenshot)
+*Job Tracker Dashboard Overview*
 
-If any of these rules are violated, the API returns a `400 Bad Request` with a specific error message, which is displayed to the user.
-
----
-
-## 📊 Entity Relationship Diagram (ERD)
-
-```mermaid
-erDiagram
-    TICKET {
-        ObjectId _id PK
-        String title "Required, Min 2 chars, Must contain letter"
-        String description "Required, Min 2 chars, Must contain letter"
-        String priority "Enum: Low, Medium, High"
-        String status "Enum: Open, In Progress, Closed"
-        String shape "Enum: Circle, Square, Triangle"
-        Date createdAt "Default: Date.now"
-    }
-```
-
----
+![Create Job Application](https://via.placeholder.com/800x450?text=Create+Job+Screenshot)
+*Create a new Job Application*
