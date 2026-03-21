@@ -12,8 +12,14 @@ const protect = async (req, res, next) => {
             // Get token from header
             token = req.headers.authorization.split(' ')[1];
 
+            // 🛡️ Sentinel: Do not fallback to a hardcoded secret for JWT verification
+            if (!process.env.JWT_SECRET) {
+                console.error("CRITICAL ERROR: JWT_SECRET environment variable is missing");
+                return res.status(500).json({ message: "Server misconfiguration" });
+            }
+
             // Verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret123');
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
             // Get user from the token
             req.user = await User.findById(decoded.id).select('-password');

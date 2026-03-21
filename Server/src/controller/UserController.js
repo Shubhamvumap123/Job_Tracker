@@ -3,7 +3,11 @@ const jwt = require('jsonwebtoken');
 
 // Generate JWT
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET || 'secret123', {
+    // 🛡️ Sentinel: Do not fallback to a hardcoded secret for JWT signing
+    if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET environment variable is missing");
+    }
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '30d',
     });
 };
