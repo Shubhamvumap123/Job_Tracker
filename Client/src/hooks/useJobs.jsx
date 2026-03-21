@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { jobService } from '../API/jobService';
 import { useDebounce } from './useDebounce';
 
@@ -79,5 +79,21 @@ export const useJobs = () => {
         setFilters(prev => ({ ...prev, [key]: value }));
     }, []);
 
-    return { jobs, loading, error, filters, handleFilterChange, removeJob, updateJob, createJob, fetchJobs };
+    // ⚡ Bolt: Memoize the context value to prevent full-app re-renders.
+    // When App.jsx re-renders (e.g., toggling the CreateJob modal), JobProvider also re-renders.
+    // Without useMemo, this hook returns a new object reference every time, forcing all
+    // consumers (like the entire dashboard) to re-render unnecessarily.
+    const contextValue = useMemo(() => ({
+        jobs,
+        loading,
+        error,
+        filters,
+        handleFilterChange,
+        removeJob,
+        updateJob,
+        createJob,
+        fetchJobs
+    }), [jobs, loading, error, filters, handleFilterChange, removeJob, updateJob, createJob, fetchJobs]);
+
+    return contextValue;
 };

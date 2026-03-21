@@ -10,3 +10,7 @@
 ## 2026-03-21 - O(n) Re-renders with Keystroke State and Inline Functions
 **Learning:** The React application updates filter state on keystrokes (`filters.search`), triggering frequent re-renders of the parent `TicketDashboard`. Because `handleEdit` and `handleDelete` were passed as inline arrow functions `<TicketList onEdit={(ticket) => ...} onDelete={(id) => ...} />`, these props changed reference on *every* render. This completely defeated React's diffing algorithm and caused an unnecessary `O(n)` re-render of every single ticket component in the list for every keystroke.
 **Action:** Wrap large child components (`TicketList`, `TicketRow`, `TicketCard`) with `React.memo()` and *always* pass them stable callback references (using `useCallback`) to preserve memoization and avoid massive re-renders when parent state updates.
+
+## 2026-03-24 - Unmemoized Context Value Re-renders Entire App
+**Learning:** When a Context Provider's parent re-renders (e.g., toggling a modal state in App.jsx), the Provider also receives new children and re-renders. If the Context `value` is an unmemoized object (like the direct return value of a custom hook `useJobs`), it creates a new reference on every render, forcing *every consuming component* in the app to re-render unnecessarily, severely impacting performance for simple parent state toggles.
+**Action:** Always wrap Context values (or custom hook returns used directly as Context values) in `useMemo` to preserve referential equality when the internal state hasn't changed.
