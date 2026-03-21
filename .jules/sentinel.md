@@ -10,3 +10,7 @@
 **Vulnerability:** The `deleteTicket` method in `TicketController.js` contained an authorization bypass that allowed any user to delete an "orphan" ticket (a ticket without an associated user), bypassing admin and owner checks.
 **Learning:** Checking for "orphan" resources and allowing unauthenticated/unauthorized users to clean them up creates an authorization bypass. If an attacker can create an orphan resource or find one, they can delete it, potentially causing data loss or covering their tracks.
 **Prevention:** Always enforce strict role-based access control (RBAC) or ownership checks for destructive actions. Orphan cleanup should be handled by a privileged background process or strictly limited to administrators, never exposed to general users.
+## 2025-03-05 - Fallback Secrets in Configuration
+**Vulnerability:** The application used hardcoded fallback values for critical secrets (`process.env.MONGO_URL || "mongodb+srv://..."` and `process.env.JWT_SECRET || 'secret123'`).
+**Learning:** Providing hardcoded defaults for sensitive keys ensures the application will start even if misconfigured, but at the cost of catastrophic security failure. An attacker who discovers the fallback secret can immediately forge JWTs or access the database.
+**Prevention:** Always "Fail Securely". If a critical environment variable like a database URI or JWT secret is missing, the application should throw an error or crash (`process.exit(1)`) immediately on startup or upon attempted use, forcing the administrator to correctly configure the environment.
