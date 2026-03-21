@@ -19,7 +19,7 @@ const Layout = ({ onCreateClick }) => {
                         <button aria-label="Open menu" onClick={() => setIsSidebarOpen(true)} className="p-2 text-gray-600 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg">
                             <Menu size={24} />
                         </button>
-                        <span className="text-lg font-bold text-gray-900">SupportDesk</span>
+                        <span className="text-lg font-bold text-gray-900">Job Tracker</span>
                     </div>
                 </div>
 

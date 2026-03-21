@@ -4,6 +4,7 @@ import { useAuth } from './AuthContext';
 
 const SocketContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSocket = () => {
     return useContext(SocketContext);
 };
@@ -24,6 +25,7 @@ export const SocketProvider = ({ children }) => {
 
             // Initialize socket connection
             const newSocket = io(socketUrl);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSocket(newSocket);
 
             newSocket.on('connect', () => {
