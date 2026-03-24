@@ -40,12 +40,13 @@
 - **HTTP/API Client**: Axios for robust data fetching.
 - **WebSockets**: Socket.io-client for listening to real-time events.
 
-### 3.2 Backend (Server)
+### 3.2 Backend (Microservices)
 - **Runtime Environment**: Node.js.
-- **Web Framework**: Express.js (v5) providing robust REST API structuring.
-- **Database**: MongoDB utilizing Mongoose ODM for schemas.
-- **Authentication**: `jsonwebtoken` (JWT) for secure sesssion handling and `bcryptjs` for encryption.
-- **WebSockets**: Socket.io for managing real-time connections.
+- **Web Framework**: Express.js (v5) providing robust REST API structuring per service.
+- **Databases**: MongoDB utilizing Mongoose ODM for schemas, and Redis for pub/sub brokering.
+- **Authentication**: `jsonwebtoken` (JWT) for secure session handling and `bcryptjs` for encryption.
+- **WebSockets**: Socket.io for managing real-time connections via a dedicated service.
+- **Orchestration & Gateway**: Docker / Docker Compose and Nginx reverse proxy.
 - **Middleware**: CORS for cross-origin compliance, Cookie-Parser, Dotenv for environment configuration.
 
 ---
@@ -75,9 +76,13 @@
 ## 5. System Architecture & API Design
 
 ### 5.1 Architecture
-The project follows a standard decoupled Monolithic Client/Server structure.
-- **Client**: Single Page Application (SPA) consuming REST endpoints and WebSocket events.
-- **Server**: Express RESTful server maintaining state and business logic interacting directly with the MongoDB database cluster.
+The project follows a modern Microservices architecture orchestrated with Docker.
+- **Client**: Single Page Application (SPA) built with React/Vite.
+- **API Gateway**: Nginx reverse proxy to route requests to appropriate microservices.
+- **Auth Service**: Node/Express microservice for user authentication and authorization (JWT).
+- **Ticket Service**: Node/Express microservice for ticket lifecycle management.
+- **Notification Service**: Node/Socket.io microservice integrated with Redis for real-time pub/sub.
+- **Databases**: MongoDB for persistent data, and Redis for message brokering.
 
 ### 5.2 Key REST API Endpoints
 
@@ -104,9 +109,9 @@ The project follows a standard decoupled Monolithic Client/Server structure.
 
 ---
 
-## 7. Submission & Deployment Expectations
+## 7. Deployment & Orchestration
 
-1. **Source Control**: Organized code structurally containing both frontend and backend logic.
-2. **Environment Specs**: Clear documentation mapped inside `.env.example` defining variables such as `MONGO_URI`, `PORT`, `JWT_SECRET`.
-3. **Local Setup**: Standard package-manager commands to run both modules parallelly (e.g., `npm run dev` in Client, `npm run start` in Server).
-4. **Deployability**: Prepared for scalable deployment onto platforms like Vercel (Frontend) and Render/Heroku (Backend).
+1. **Containerization**: Every service (Auth, Ticket, Notification, API Gateway, Frontend) has its own `Dockerfile`.
+2. **Orchestration**: A `docker-compose.yml` file manages the entire stack locally, including MongoDB and Redis containers.
+3. **Local Setup**: Simple `docker-compose up --build` will bring up the entire SaaS application.
+4. **Deployability**: Prepared for scalable deployment onto Docker-compatible platforms (AWS ECS, DigitalOcean App Platform, or Kubernetes).

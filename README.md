@@ -1,27 +1,24 @@
-# Job Tracker Application
+# Ticket Support SaaS
 
-A robust, full-stack MERN application designed for creating, managing, and tracking job applications. This project is a production-ready SaaS dashboard that helps you organize your job search.
+A robust, production-ready microservices application designed for creating, managing, and tracking support tickets in real-time. This project features a modern React frontend with a distributed backend orchestrated by Docker.
 
-## Features
+> 📚 **Project Documentation**:
+> - [Project Specifications](specifications.md): Core functional and technical requirements.
+> - [Build & Orchestration Guide](BUILD.md): Detailed instructions on building, running, and managing the Docker stack.
+
+## 🌟 Features
 
 ### Core Functionality
-- **User Authentication**: Secure signup, login, and logout using JWT.
-- **Manage Applications**: Users can submit new job applications with Company, Position, Location, Salary, Notes, and Status tracking.
-- **Job Status Tracking**: Categorize applications into *Applied*, *Interview*, *Offer*, and *Rejected*.
-- **Dashboard**: A centralized view of all applications, featuring:
-  - **Dynamic Analytics**: Real-time stats for Total Applications, Applied, Interviewing, and Offers.
-  - **Status Indicators**: Color-coded badges for quick visual recognition of application status.
-- **Search & Filter**:
-  - **Search**: Real-time filtering by company, position, or location.
-  - **Filter**: Dropdowns to filter by application Status.
-- **Edit & Delete**: A modal interface to update job application details and a fast way to remove rejected or stale jobs.
+- **User Authentication**: Secure signup, login, and authorization across microservices using JWT.
+- **Manage Tickets**: Users can submit support tickets with Title, Description, Priority, and Status.
+- **Real-Time Notifications**: Instant WebSocket updates powered by Redis pub/sub when a ticket is created or updated.
+- **API Gateway**: Unified Nginx reverse proxy to securely route API requests to Auth, Ticket, and Notification services.
 
-### UX/UI
-- **Responsive Design**: Fully responsive layout that adapts to mobile, tablet, and desktop screens with a collapsible sidebar.
-- **Modern Dashboard UI**: Professional SaaS layout built with TailwindCSS and Lucide React icons.
-- **Feedback & Validation**:
-  - **Frontend**: Immediate visual feedback, loaders, and toast notifications.
-  - **Backend Errors**: Clear, user-friendly error messages if validation fails.
+### Microservices Architecture
+- **Auth Service**: Node.js microservice maintaining user data and managing JWTs.
+- **Ticket Service**: Node.js microservice managing CRUD logic for tickets.
+- **Notification Service**: WebSockets-based microservice pushing real-time events to connected clients.
+- **Database Layer**: MongoDB for persistence and Redis for pub/sub event brokering.
 
 ---
 
@@ -29,93 +26,51 @@ A robust, full-stack MERN application designed for creating, managing, and track
 
 ### Frontend (Client)
 - **Framework**: React.js / Vite
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
+- **Styling**: Tailwind CSS, Lucide React Icons
 - **HTTP Client**: Axios
-- **Routing**: React Router DOM
+- **Real-Time**: Socket.io-client
 
-### Backend (Server)
-- **Runtime**: Node.js
-- **Framework**: Express.js
+### Backend (Microservices)
+- **Runtime**: Node.js, Express.js
 - **Database**: MongoDB (Mongoose)
-- **Authentication**: JSON Web Tokens (JWT)
-- **Utilities**: CORS, Dotenv, Bcryptjs
+- **Message Broker**: Redis
+- **Gateway**: Nginx
+- **Orchestration**: Docker & Docker Compose
 
 ---
 
 ## ⚙️ Setup Instructions
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v14 or higher)
-- [MongoDB](https://www.mongodb.com/) (Local instance or Atlas URL)
-- [pnpm](https://pnpm.io/) package manager
+- [Docker](https://www.docker.com/) and Docker Compose installed on your system.
 
-### 1. Backend Setup
+### Quick Start (Recommended)
 
-1.  Navigate to the server directory:
-    ```bash
-    cd Server
-    ```
-2.  Install dependencies:
-    ```bash
-    pnpm install
-    ```
-3.  **Configuration**: Ensure a `.env` file exists in `Server/` with the following content:
-    ```env
-    PORT=5000
-    MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_jwt_secret
-    ```
-4.  Start the server:
-    ```bash
-    pnpm start
-    ```
-    The server will run at `http://localhost:5000`.
+The easiest way to run the entire SaaS application is using Docker Compose. It will automatically provision MongoDB, Redis, the API Gateway, all Microservices, and the Frontend.
 
-### 2. Frontend Setup
+1.  Clone the repository and ensure Docker is running.
+2.  From the root directory, run:
+    ```bash
+    docker-compose up --build
+    ```
+3.  Access the single-page application dashboard at `http://localhost`.
 
-1.  Open a new terminal and navigate to the client directory:
-    ```bash
-    cd Client
-    ```
-2.  Install dependencies:
-    ```bash
-    pnpm install
-    ```
-3.  Start the development server:
-    ```bash
-    pnpm run dev
-    ```
-    The application will launch at `http://localhost:5173`.
+### Local Development (Without Docker)
+
+You can also run services individually for local development, provided you have a local MongoDB instance running on `27017` and a local Redis instance on `6379`.
+
+1. **Auth Service**: `cd auth-service && npm install && npm start` (Runs on 5001)
+2. **Ticket Service**: `cd ticket-service && npm install && npm start` (Runs on 5002)
+3. **Notification Service**: `cd notification-service && npm install && npm start` (Runs on 5003)
+4. **Client**: `cd Client && npm install && npm run dev` (Runs on 5173)
+
+*Note: Without the Nginx API gateway running, you will need to manually configure the frontend's `.env` to point to the respective local service ports instead of hitting the unified `/api/...` paths.*
 
 ---
 
-## 🚀 Deployment (Vercel + Render)
+## 🚀 Deployment
 
-### Backend (Render)
-1. Push your code to GitHub.
-2. Go to [Render](https://render.com/), create a new "Web Service".
-3. Connect your GitHub repository.
-4. Set the Build Command to `pnpm install` and the Start Command to `pnpm start`.
-5. Add your Environment Variables (`MONGO_URI`, `JWT_SECRET`, etc.).
-6. Deploy! Copy the generated API URL.
-
-### Frontend (Vercel)
-1. Go to [Vercel](https://vercel.com/) and create a new project.
-2. Connect your GitHub repository.
-3. Set the Framework Preset to Vite.
-4. Ensure the Build Command is `pnpm run build`.
-5. In your frontend API service files (e.g. `jobService.js`), replace `localhost` with your new Render backend API URL.
-6. Deploy!
-
----
-
-## 📸 Screenshots
-
-*(Add screenshots of your application here)*
-
-![Dashboard Screenshot](https://via.placeholder.com/800x450?text=Dashboard+Screenshot)
-*Job Tracker Dashboard Overview*
-
-![Create Job Application](https://via.placeholder.com/800x450?text=Create+Job+Screenshot)
-*Create a new Job Application*
+Each microservice contains its own `Dockerfile`. For deployment, you can push these images to a container registry (AWS ECR, Docker Hub) and orchestrate them on platforms such as:
+- AWS ECS (Elastic Container Service)
+- DigitalOcean App Platform
+- Kubernetes

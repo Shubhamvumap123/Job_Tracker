@@ -1,16 +1,27 @@
-# React + Vite
+# Ticket Support SaaS - Frontend Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React.js + Vite frontend for the Ticket Support SaaS application. It interacts with the backend microservices through a unified Nginx API Gateway.
 
-Currently, two official plugins are available:
+## Features
+- **Modern UI**: Styled with TailwindCSS and Lucide-React.
+- **Dynamic API Routing**: Built to seamlessly consume standard `Axios` requests without hardcoding specific backend ports, enabling scalable Docker proxying.
+- **Real-Time Context**: Utilizes `Socket.io-client` to listen for immediate ticket status updates emitted by the `notification-service`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup Instructions
 
-## React Compiler
+### With Docker (Recommended)
+You do not need to start the client manually. The root `docker-compose.yml` mounts this directory into a Node.js container and exposes it by proxying it through the unified Nginx gateway.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Manual Local Development
+If you prefer running just the frontend development server:
 
-## Expanding the ESLint configuration
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the Vite server:
+   ```bash
+   npm run dev
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+*Note: You must also have the backend services running (preferably via docker-compose) for the API routes to resolve properly.*
