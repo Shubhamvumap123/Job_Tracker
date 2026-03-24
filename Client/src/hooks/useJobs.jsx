@@ -13,6 +13,13 @@ export const useJobs = () => {
 
     // fetch jobs whenever filters or search changes
     const fetchJobs = useCallback(async () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || !user.token) {
+            // Do not fetch jobs if user is not authenticated
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         try {
             const params = { status: filters.status, search: debouncedSearch };

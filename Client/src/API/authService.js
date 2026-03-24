@@ -1,7 +1,12 @@
 import axios from 'axios';
 
-// API Gateway route
-const API_URL = '/api/auth/';
+const isLocal = window.location.hostname === 'localhost';
+const API_BASE_URL = isLocal
+    ? "http://localhost:5000"
+    : "https://ticket-support11.onrender.com";
+
+// API Gateway route for users in monolithic server
+const API_URL = `${API_BASE_URL}/api/users/`;
 
 const register = async (userData) => {
     const response = await axios.post(API_URL, userData);
