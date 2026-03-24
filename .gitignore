@@ -49,3 +49,5 @@ coverage/
 
 # Misc
 *.pem
+git_log.txt
+info.MD
