@@ -1,27 +1,23 @@
-# Job Tracker Application
+# Job Tracker SaaS
 
-A robust, full-stack MERN application designed for creating, managing, and tracking job applications. This project is a production-ready SaaS dashboard that helps you organize your job search.
+A robust, production-ready full-stack application designed for creating, managing, and tracking job applications in real-time. This project features a modern React frontend and a monolithic Node.js backend.
 
-## Features
+> 📚 **Project Documentation**:
+> - [Project Specifications](specifications.md): Core functional and technical requirements.
+> - [Build & Run Guide](BUILD.md): Detailed instructions on building, running, and deploying the application.
+
+## 🌟 Features
 
 ### Core Functionality
-- **User Authentication**: Secure signup, login, and logout using JWT.
-- **Manage Applications**: Users can submit new job applications with Company, Position, Location, Salary, Notes, and Status tracking.
-- **Job Status Tracking**: Categorize applications into *Applied*, *Interview*, *Offer*, and *Rejected*.
-- **Dashboard**: A centralized view of all applications, featuring:
-  - **Dynamic Analytics**: Real-time stats for Total Applications, Applied, Interviewing, and Offers.
-  - **Status Indicators**: Color-coded badges for quick visual recognition of application status.
-- **Search & Filter**:
-  - **Search**: Real-time filtering by company, position, or location.
-  - **Filter**: Dropdowns to filter by application Status.
-- **Edit & Delete**: A modal interface to update job application details and a fast way to remove rejected or stale jobs.
+- **User Authentication**: Secure signup, login, and authorization using JSON Web Tokens (JWT).
+- **Manage Job Applications**: Users can track job applications with details like Company, Position, Status, Location, and Salary.
+- **Real-Time Updates**: Instant WebSocket updates via Socket.io when a job application is created, updated, or deleted.
+- **RESTful API**: A unified Express.js backend securely serving all React frontend requests.
 
-### UX/UI
-- **Responsive Design**: Fully responsive layout that adapts to mobile, tablet, and desktop screens with a collapsible sidebar.
-- **Modern Dashboard UI**: Professional SaaS layout built with TailwindCSS and Lucide React icons.
-- **Feedback & Validation**:
-  - **Frontend**: Immediate visual feedback, loaders, and toast notifications.
-  - **Backend Errors**: Clear, user-friendly error messages if validation fails.
+### Monolithic Architecture
+- **Server**: A single Node.js/Express.js backend providing user authentication and job management endpoints.
+- **Database Layer**: MongoDB for persistence.
+- **Client**: Single Page React Application built with Vite.
 
 ---
 
@@ -29,93 +25,40 @@ A robust, full-stack MERN application designed for creating, managing, and track
 
 ### Frontend (Client)
 - **Framework**: React.js / Vite
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
+- **Styling**: Tailwind CSS, Lucide React Icons
 - **HTTP Client**: Axios
-- **Routing**: React Router DOM
+- **Real-Time**: Socket.io-client
 
 ### Backend (Server)
-- **Runtime**: Node.js
-- **Framework**: Express.js
+- **Runtime**: Node.js, Express.js
 - **Database**: MongoDB (Mongoose)
-- **Authentication**: JSON Web Tokens (JWT)
-- **Utilities**: CORS, Dotenv, Bcryptjs
+- **Real-Time**: Socket.io
 
 ---
 
 ## ⚙️ Setup Instructions
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v14 or higher)
-- [MongoDB](https://www.mongodb.com/) (Local instance or Atlas URL)
-- [pnpm](https://pnpm.io/) package manager
+- Node.js (v18+)
+- Local or Cloud MongoDB Database
 
-### 1. Backend Setup
+### Local Development
 
-1.  Navigate to the server directory:
-    ```bash
-    cd Server
-    ```
-2.  Install dependencies:
-    ```bash
-    pnpm install
-    ```
-3.  **Configuration**: Ensure a `.env` file exists in `Server/` with the following content:
-    ```env
-    PORT=5000
-    MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_jwt_secret
-    ```
-4.  Start the server:
-    ```bash
-    pnpm start
-    ```
-    The server will run at `http://localhost:5000`.
-
-### 2. Frontend Setup
-
-1.  Open a new terminal and navigate to the client directory:
-    ```bash
-    cd Client
-    ```
-2.  Install dependencies:
-    ```bash
-    pnpm install
-    ```
-3.  Start the development server:
-    ```bash
-    pnpm run dev
-    ```
-    The application will launch at `http://localhost:5173`.
+1. **Clone the repository.**
+2. **Server Setup**:
+   - `cd Server`
+   - `npm install`
+   - Create a `.env` file with `MONGO_URL`, `JWT_SECRET`, and `PORT=5000`.
+   - `npm run dev` (Runs on port 5000)
+3. **Client Setup**:
+   - `cd Client`
+   - `npm install`
+   - `npm run dev` (Runs on port 5173)
 
 ---
 
-## 🚀 Deployment (Vercel + Render)
+## 🚀 Deployment
 
-### Backend (Render)
-1. Push your code to GitHub.
-2. Go to [Render](https://render.com/), create a new "Web Service".
-3. Connect your GitHub repository.
-4. Set the Build Command to `pnpm install` and the Start Command to `pnpm start`.
-5. Add your Environment Variables (`MONGO_URI`, `JWT_SECRET`, etc.).
-6. Deploy! Copy the generated API URL.
-
-### Frontend (Vercel)
-1. Go to [Vercel](https://vercel.com/) and create a new project.
-2. Connect your GitHub repository.
-3. Set the Framework Preset to Vite.
-4. Ensure the Build Command is `pnpm run build`.
-5. In your frontend API service files (e.g. `jobService.js`), replace `localhost` with your new Render backend API URL.
-6. Deploy!
-
----
-
-## 📸 Screenshots
-
-*(Add screenshots of your application here)*
-
-![Dashboard Screenshot](https://via.placeholder.com/800x450?text=Dashboard+Screenshot)
-*Job Tracker Dashboard Overview*
-
-![Create Job Application](https://via.placeholder.com/800x450?text=Create+Job+Screenshot)
-*Create a new Job Application*
+The project is structured for easy deployment to cloud platforms:
+- **Backend**: Can be deployed as a Web Service on platforms like Render, Heroku, or DigitalOcean.
+- **Frontend**: Designed to be compiled (`npm run build`) and deployed to static hosting platforms like Vercel, Netlify, or AWS S3.

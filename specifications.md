@@ -1,9 +1,9 @@
-# Support Ticket Management Application - Specifications
+# Job Application Tracker - Specifications
 
 ## 1. Project Overview
 
-**Project Name**: Ticket Support SaaS
-**Description**: A robust, full-stack web application designed for creating, managing, and tracking support tickets in real-time. It provides a centralized dashboard for users to monitor ticket statuses and priorities effectively. 
+**Project Name**: Job Tracker SaaS
+**Description**: A full-stack web application designed for creating, managing, and tracking job applications throughout the hiring process. It provides a centralized dashboard for users to monitor application statuses and locations effectively. 
 **Objective**: Build a scalable and maintainable application demonstrating best practices in the MERN stack (MongoDB, Express.js, React.js, Node.js), including secure authentication, modern UI design, and real-time updates via WebSockets.
 
 ---
@@ -12,21 +12,20 @@
 
 ### 2.1 User Authentication & Authorization
 - **Registration/Login**: Secure user signup and login utilizing JSON Web Tokens (JWT) and Bcrypt for password hashing.
-- **Role-Based Access**: Manage standard users and potentially admin roles for holistic ticket oversight.
+- **Protected Routes**: Restrict access to the job dashboard so only authenticated users can view their applications.
 
-### 2.2 Ticket Management (CRUD)
-- **Create Tickets**: Users can submit new support tickets with a Title, Description, Priority (Low, Medium, High), and an initial Status (Open).
-- **View Tickets**: A comprehensive dashboard listing all tickets with key details (Title, short preview of Description, Priority, Status, Creation Date).
-- **Update Tickets**: Users can modify a ticket's Status (e.g., Open, In Progress, Resolved, Closed) and Priority.
-- **Delete Tickets**: Authorized users can remove unwanted or duplicate tickets.
+### 2.2 Job Management (CRUD)
+- **Create Job Apps**: Users can submit new job applications with Company, Position, Location, Salary, Notes, and Status.
+- **View Dashboard**: A comprehensive dashboard listing all jobs in a List View or Grid View.
+- **Update Jobs**: Users can modify a job's Status (e.g., Applied, Interview, Offer, Rejected) or details over time.
+- **Delete Jobs**: Authorized users can remove tracking entries.
 
 ### 2.3 Real-time Updates
-- **Live Sync**: Implement Socket.io to push real-time updates when a ticket's status is changed, a new ticket is created, or a ticket stands updated to ensure all active users view the most current data.
+- **Live Sync**: Implement Socket.io to push real-time updates across multiple active sessions when a job is modified.
 
 ### 2.4 Search & Filtering
-- **Status Filter**: Rapidly filter tickets based on their current resolution status.
-- **Priority Filter**: View tickets sorted by their urgency (Low, Medium, High).
-- **Keyword Search**: Search functionality by ticket title to quickly locate specific issues.
+- **Status Filter**: Rapidly filter jobs based on their current hiring pipeline status.
+- **Keyword Search**: Search functionality by company or position to quickly locate specific applications.
 
 ---
 
@@ -42,32 +41,34 @@
 
 ### 3.2 Backend (Server)
 - **Runtime Environment**: Node.js.
-- **Web Framework**: Express.js (v5) providing robust REST API structuring.
+- **Web Framework**: Express.js providing robust REST API structuring.
 - **Database**: MongoDB utilizing Mongoose ODM for schemas.
-- **Authentication**: `jsonwebtoken` (JWT) for secure sesssion handling and `bcryptjs` for encryption.
+- **Authentication**: `jsonwebtoken` (JWT) for secure session handling and `bcryptjs` for encryption.
 - **WebSockets**: Socket.io for managing real-time connections.
-- **Middleware**: CORS for cross-origin compliance, Cookie-Parser, Dotenv for environment configuration.
+- **Middleware**: CORS for cross-origin compliance, Dotenv for environment configuration.
 
 ---
 
 ## 4. Database Modeling
 
-### 4.1 Ticket Collection (Proposed Schema)
+### 4.1 Job Collection (Schema)
 - `_id`: ObjectId (Auto-generated)
-- `title`: String (Required, trimmed)
-- `description`: String (Required)
-- `priority`: String (Enum: ['Low', 'Medium', 'High'], default: 'Low')
-- `status`: String (Enum: ['Open', 'In Progress', 'Resolved', 'Closed'], default: 'Open')
-- `createdBy`: ObjectId (Reference to `User` collection)
+- `company`: String (Required, trimmed)
+- `position`: String (Required)
+- `status`: String (Enum: ['Applied', 'Interview', 'Offer', 'Rejected'], default: 'Applied')
+- `location`: String
+- `salary`: String
+- `notes`: String
+- `user`: ObjectId (Reference to `User` collection)
 - `createdAt`: Date (Auto Timestamp)
 - `updatedAt`: Date (Auto Timestamp)
 
-### 4.2 User Collection (Proposed Schema)
+### 4.2 User Collection (Schema)
 - `_id`: ObjectId (Auto-generated)
 - `name`: String (Required)
-- `email`: String (Required, Unqiue)
+- `email`: String (Required, Unique)
 - `password`: String (Required, Hashed)
-- `role`: String (Enum: ['User', 'Admin'], default: 'User')
+- `role`: String (Enum: ['customer', 'agent', 'admin'], default: 'customer')
 - `createdAt`: Date (Auto Timestamp)
 
 ---
@@ -75,38 +76,29 @@
 ## 5. System Architecture & API Design
 
 ### 5.1 Architecture
-The project follows a standard decoupled Monolithic Client/Server structure.
-- **Client**: Single Page Application (SPA) consuming REST endpoints and WebSocket events.
-- **Server**: Express RESTful server maintaining state and business logic interacting directly with the MongoDB database cluster.
+The project follows a Monolithic MERN stack architecture.
+- **Client**: Single Page Application (SPA) built with React/Vite.
+- **Server**: Monolithic Node/Express backend handling user authentication, job logic, and Socket.io endpoints.
+- **Database**: MongoDB for persistent data.
 
 ### 5.2 Key REST API Endpoints
 
-#### Authentication Routes (`/api/auth`)
-- `POST /register`: Registers a new user.
-- `POST /login`: Authenticates a user and returns a JWT/Cookie.
-- `POST /logout`: Clears the authentication token.
+#### User Routes (`/api/users`)
+- `POST /`: Registers a new user.
+- `POST /login`: Authenticates a user and returns a JWT token.
+- `GET /me`: Retrieves the current user's profile (requires authentication).
 
-#### Ticket Routes (`/api/tickets`)
-- `GET /`: Retrieves all tickets (with optional query parameters for filtering).
-- `GET /:id`: Retrieves details of a specific ticket.
-- `POST /`: Creates a new ticket.
-- `PUT /:id`: Updates an existing ticket (requires authorization).
-- `DELETE /:id`: Removes a specific ticket (requires authorization).
+#### Job Routes (`/api/jobs`)
+- `GET /list`: Retrieves all jobs for the authenticated user (supports search/status queries).
+- `POST /create`: Creates a new job application.
+- `PUT /update/:id`: Updates an existing job entry.
+- `DELETE /delete/:id`: Removes a specific job entry.
 
 ---
 
 ## 6. UI / UX Guidelines
 
 - **Responsiveness**: The dashboard must adapt gracefully to Mobile, Tablet, and Desktop environments using Tailwind's responsive prefixes.
-- **User Feedback**: Immediate visual feedback for actions (e.g., Toast notifications on ticket creation or deletion, loading spinners while fetching data).
-- **Simplicity**: Maintain a clean, intuitive layout heavily focusing on readable typography and clear color-coded indicators for Ticket Statuses and Priorities.
-- **Error Handling**: Friendly and clear error presentation for bad network requests or validation failures.
-
----
-
-## 7. Submission & Deployment Expectations
-
-1. **Source Control**: Organized code structurally containing both frontend and backend logic.
-2. **Environment Specs**: Clear documentation mapped inside `.env.example` defining variables such as `MONGO_URI`, `PORT`, `JWT_SECRET`.
-3. **Local Setup**: Standard package-manager commands to run both modules parallelly (e.g., `npm run dev` in Client, `npm run start` in Server).
-4. **Deployability**: Prepared for scalable deployment onto platforms like Vercel (Frontend) and Render/Heroku (Backend).
+- **User Feedback**: Immediate visual feedback for actions (e.g., Toast notifications, loading spinners).
+- **Simplicity**: Maintain a clean, intuitive layout heavily focusing on readable typography and clear action buttons.
+- **Flexibility**: Allow toggling between Grid and List views for the Job Dashboard.

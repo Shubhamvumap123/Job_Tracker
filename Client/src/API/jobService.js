@@ -6,6 +6,18 @@ const API_BASE_URL = isLocal
 
 const API_URL = `${API_BASE_URL}/api/jobs`;
 
+// Automatically handle stale or invalid tokens by intercepting 401 errors
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 // Helper to get auth header
 const getAuthHeader = () => {
     const user = JSON.parse(localStorage.getItem('user'));
