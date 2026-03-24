@@ -1,51 +1,54 @@
-# Build & Orchestration Guide
+# Build & Deployment Guide
 
-This document explains the build process and Docker orchestration for the Ticket Support SaaS application.
+This document explains the local execution and deployment processes for the Job Tracker SaaS application.
 
 ## 1. System Requirements
-- **Docker**: Version 20.10+
-- **Docker Compose**: Version 2.0+ or docker-compose 1.29+
-- **Node.js**: (Only if running outside of Docker) Version 18+
+- **Node.js**: Version 18+
+- **MongoDB**: A local instance running on port `27017` or a cloud MongoDB Atlas URI.
 
-## 2. Global Services Overview
-The `docker-compose.yml` file sits in the root of the project and wires together six separate containers into a single virtual network (`ticket_net`):
-1. **mongodb**: Persistent database container using `mongo:6-jammy`. Stores information for Auth and Ticket services.
-2. **redis**: In-memory message broker using `redis:7-alpine`. Facilitates Pub/Sub between the Ticket Service and Notification Service.
-3. **api-gateway**: An Nginx container built from `api-gateway/Dockerfile` that exposes port `80` to the host machine and reverse proxies internal traffic.
-4. **auth-service**: Node.js microservice running on port `5001` internally.
-5. **ticket-service**: Node.js microservice running on port `5002` internally.
-6. **notification-service**: Node.js WebSockets microservice running on port `5003` internally.
-7. **frontend**: React/Vite client running on port `5173` internally, served dynamically for HMR during dev through Nginx proxying.
+## 2. Directory Structure Overview
+The project is split into two primary directories, functioning as entirely separate build environments:
+1. **Server/**: The Node.js/Express monolithic backend.
+2. **Client/**: The Vite/React single-page application frontend.
 
-## 3. Build and Run Commands
+## 3. Local Development Commands
 
-### Start All Services
-To build the images and start the entire stack in detached mode:
+### Running the Backend Server
+Open a terminal and navigate to the `Server` directory:
 ```bash
-docker-compose up --build -d
+cd Server
+npm install
+# Create a .env file with MONGO_URL, JWT_SECRET, and PORT=5000
+npm run dev
 ```
-All traffic will be available at `http://localhost`.
+The server will boot up and handle API requests at `http://localhost:5000`.
 
-### View Logs
-To check the logs of a specific service (e.g., if you are debugging the Notification service):
+### Running the Frontend Client
+Open a second terminal and navigate to the `Client` directory:
 ```bash
-docker logs <container_name> -f
+cd Client
+npm install
+npm run dev
 ```
-Example container names: `ticket_support_auth`, `ticket_support_gateway`, `ticket_support_redis`.
+Vite will start the development server with Hot Module Replacement (HMR) at `http://localhost:5173`. 
+The frontend makes API calls natively to the backend via dynamic configurations based on the `window.location.hostname`.
 
-### Stop Services
-To spin down everything without deleting volumes:
-```bash
-docker-compose down
-```
-To spin down and wipe the MongoDB data volume (resetting the database):
-```bash
-docker-compose down -v
-```
+## 4. Production Deployment
 
-## 4. Multi-Stage Dockerfiles (Production Addendum)
-Currently, the `Dockerfile`s are optimized for running the development servers using `npm install` and Node `index.js`. 
-To deploy this architecture to a genuine production environment (like AWS ECS), you should modify the frontend `Client/Dockerfile` to employ a multi-stage Nginx build:
-1. `npm run build`
-2. `COPY dist /usr/share/nginx/html`
-This will serve pre-compiled, minified React assets globally.
+### Backend (Server)
+For deployment to platforms like Render, Railway, or Heroku:
+1. Connect your repository to the hosting platform.
+2. Set the Root Directory to `Server`.
+3. Set the Build Command to `npm install`.
+4. Set the Start Command to `npm run start` (or `node src/server.js`).
+5. Inject your `MONGO_URL` and `JWT_SECRET` natively into the platform's Environment Variables dashboard.
+
+### Frontend (Client)
+For deployment to static hosting platforms like Vercel or Netlify:
+1. Connect your repository to the hosting platform.
+2. Set the Root Directory to `Client`.
+3. Set the Build Command to `npm run build`.
+4. Set the Output/Publish Directory to `dist`.
+5. In the platform's settings, ensure Single Page Application (SPA) routing is enabled by redirecting all 404s to `index.html`.
+
+Once both are deployed, ensure the `API_BASE_URL` in the frontend files points directly to your deployed Backend URL.
