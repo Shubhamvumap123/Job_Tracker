@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 
 const protect = async (req, res, next) => {
     let token;
@@ -21,8 +20,15 @@ const protect = async (req, res, next) => {
             // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            // Get user from the token
-            req.user = await User.findById(decoded.id).select('-password');
+            // Populate user from the token payload (Stateless)
+            // The token now contains { id, name, email, role }
+            req.user = {
+                id: decoded.id,
+                _id: decoded.id, // Providing _id for Mongoose query compatibility
+                name: decoded.name,
+                email: decoded.email,
+                role: decoded.role
+            };
 
             if (typeof next === 'function') {
                 next();
