@@ -2,14 +2,21 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 // Generate JWT
-const generateToken = (id) => {
+const generateToken = (user) => {
     // 🛡️ Sentinel: Do not fallback to a hardcoded secret for JWT signing
     if (!process.env.JWT_SECRET) {
         throw new Error("JWT_SECRET environment variable is missing");
     }
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '30d',
-    });
+    return jwt.sign(
+        { 
+            id: user._id, 
+            name: user.name, 
+            email: user.email, 
+            role: user.role 
+        }, 
+        process.env.JWT_SECRET, 
+        { expiresIn: '30d' }
+    );
 };
 
 // @desc    Register new user (Customer by default, or specific role if Admin)
@@ -17,7 +24,7 @@ const generateToken = (id) => {
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body; // 🛡️ Sentinel: Remove role/dept/skills from body to prevent mass assignment
+        const { name, email, password, role, department } = req.body;
 
         // 1. Basic Validation
         if (!name || !email || !password) {
@@ -47,18 +54,39 @@ const registerUser = async (req, res) => {
             name,
             email,
             password,
-            role: 'customer', // 🛡️ Sentinel: Hardcode role to prevent privilege escalation
-            department: 'General', // 🛡️ Sentinel: Hardcode department
-            skills: [] // 🛡️ Sentinel: Hardcode skills
+            role: role || 'customer',
+            department: department || 'General'
         });
 
         if (user) {
+            const token = generateToken(user);
+            
+            // Publish event to Redis (independent integration)
+            const Redis = require('ioredis');
+            const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+                maxRetriesPerRequest: null,
+                retryStrategy(times) {
+                    return Math.min(times * 100, 3000);
+                }
+            });
+            redis.on('error', (err) => console.error('Redis Publisher Error:', err.message));
+            
+            redis.publish('auth_events', JSON.stringify({
+                event: 'user_registered',
+                data: {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role
+                }
+            }));
+
             res.status(201).json({
                 _id: user.id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id),
+                token: token,
             });
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -101,7 +129,7 @@ const loginUser = async (req, res) => {
                 role: user.role,
                 department: user.department,
                 skills: user.skills,
-                token: generateToken(user._id),
+                token: generateToken(user),
             });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
