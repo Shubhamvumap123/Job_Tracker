@@ -18,15 +18,15 @@ export const JobProvider = ({ children }) => {
             fetchJobs();
         };
 
-        socket.on('job_created', handleJobEvent);
-        socket.on('job_updated', handleJobEvent);
-        socket.on('job_deleted', handleJobEvent);
+        socket.on('ticket_created', handleJobEvent);
+        socket.on('ticket_updated', handleJobEvent);
+        socket.on('ticket_deleted', handleJobEvent);
         socket.on('dashboard_update', handleJobEvent);
 
         return () => {
-            socket.off('job_created', handleJobEvent);
-            socket.off('job_updated', handleJobEvent);
-            socket.off('job_deleted', handleJobEvent);
+            socket.off('ticket_created', handleJobEvent);
+            socket.off('ticket_updated', handleJobEvent);
+            socket.off('ticket_deleted', handleJobEvent);
             socket.off('dashboard_update', handleJobEvent);
         };
     }, [socket, fetchJobs]);

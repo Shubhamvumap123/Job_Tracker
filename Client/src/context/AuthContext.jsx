@@ -1,10 +1,11 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-
-const isLocal = window.location.hostname === 'localhost';
-const API_BASE_URL = isLocal
-    ? 'http://localhost:5000'
-    : 'https://ticket-support11.onrender.com';
+// const isLocal = window.location.hostname === 'localhost';
+// const API_BASE_URL = isLocal
+//     ? 'http://localhost:5000'
+//     : 'https://ticket-support11.onrender.com';
+// Use relative paths for proxy/gateway routing
+const API_URL = '/api/auth';
 
 
 const AuthContext = createContext();
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     // Register user
     const register = async (userData) => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/users`, userData);
+            const response = await axios.post(`${API_URL}/`, userData);
             if (response.data) {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 setUser(response.data);
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     // Login user
     const login = async (userData) => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/users/login`, userData);
+            const response = await axios.post(`${API_URL}/login`, userData);
             if (response.data) {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 setUser(response.data);
