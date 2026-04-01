@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { jobService } from '../API/jobService';
+import { useAuth } from '../context/AuthContext';
 import { useDebounce } from './useDebounce';
 
 export const useJobs = () => {
@@ -7,15 +8,16 @@ export const useJobs = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [filters, setFilters] = useState({ status: '', search: '' });
+    const { user } = useAuth(); // React to auth state changes
 
     // delay search to avoid too many api calls
     const debouncedSearch = useDebounce(filters.search, 500);
 
-    // fetch jobs whenever filters or search changes
+    // fetch jobs whenever filters, search, or auth state changes
     const fetchJobs = useCallback(async () => {
-        const user = JSON.parse(localStorage.getItem('user'));
+        // Rely on contextual user instead of manually checking localStorage so React state aligns
         if (!user || !user.token) {
-            // Do not fetch jobs if user is not authenticated
+            // Do not fetch jobs if user is not authenticated yet
             setLoading(false);
             return;
         }
@@ -28,7 +30,8 @@ export const useJobs = () => {
             // In Server we kept tickets: jobs so frontend doesn't break.
             // We should use data.tickets or data.jobs depending on what server sends.
             // Server was updated to send { success: true, tickets: jobs }
-            const jobsData = data.tickets || data.data || data;
+            // Defensive check for array data
+            const jobsData = Array.isArray(data) ? data : (data.tickets || data.jobs || []);
             setJobs(jobsData);
             setError(null);
         } catch {
@@ -36,7 +39,7 @@ export const useJobs = () => {
         } finally {
             setLoading(false);
         }
-    }, [filters.status, debouncedSearch]);
+    }, [filters.status, debouncedSearch, user]);
 
     // initial extraction
     useEffect(() => {

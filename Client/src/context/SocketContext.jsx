@@ -15,11 +15,8 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if (user) {
-            // Determine socket URL based on environment
-            const isLocal = window.location.hostname === 'localhost';
-            const socketUrl = isLocal
-                ? 'http://localhost:5000'
-                : 'https://ticket-support11.onrender.com';
+            // Use relative path for proxy/gateway routing
+            const socketUrl = '/';
 
             console.log(`Initializing socket connection to: ${socketUrl}`);
 
@@ -29,9 +26,17 @@ export const SocketProvider = ({ children }) => {
             setSocket(newSocket);
 
             newSocket.on('connect', () => {
-                console.log('Connected to socket server');
+                console.log('✅ Connected to Notification Service (Socket.io)');
                 // Join user's private room
                 newSocket.emit('join_user_room', user._id);
+            });
+
+            newSocket.on('connect_error', (err) => {
+                console.error('❌ Socket Connection Error:', err.message);
+            });
+
+            newSocket.on('disconnect', (reason) => {
+                console.warn('⚠️ Socket Disconnected:', reason);
             });
 
             return () => newSocket.close();
